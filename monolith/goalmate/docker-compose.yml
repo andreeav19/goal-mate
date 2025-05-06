@@ -8,7 +8,7 @@ services:
       POSTGRES_USER: ${USER_DEV}
       POSTGRES_PASSWORD: ${PASSWORD_DEV}
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - pgdata-dev:/var/lib/postgresql/data
 
@@ -20,7 +20,7 @@ services:
       POSTGRES_USER: ${USER_TEST}
       POSTGRES_PASSWORD: ${PASSWORD_TEST}
     ports:
-      - "5433:5432"
+      - "5434:5432"
     volumes:
       - pgdata-test:/var/lib/postgresql/data
 
