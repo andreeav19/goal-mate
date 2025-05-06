@@ -24,6 +24,8 @@ public class Goal {
     @Column(nullable = false)
     private Float targetAmount;
 
+    private Float currentAmount;
+
     @Column(nullable = false)
     private String targetUnit;
 
@@ -40,4 +42,10 @@ public class Goal {
     @OneToMany(mappedBy = "goal", cascade = CascadeType.ALL)
     private List<Session> sessions;
 
+    @PrePersist
+    private void ensureCurrentAmountDefault() {
+        if (currentAmount == null) {
+            currentAmount = 0.0f;
+        }
+    }
 }
