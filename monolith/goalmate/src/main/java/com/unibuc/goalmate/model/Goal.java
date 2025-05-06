@@ -22,7 +22,10 @@ public class Goal {
     private String description;
 
     @Column(nullable = false)
-    private String targetValue;
+    private Float targetAmount;
+
+    @Column(nullable = false)
+    private String targetUnit;
 
     private LocalDate deadline;
 

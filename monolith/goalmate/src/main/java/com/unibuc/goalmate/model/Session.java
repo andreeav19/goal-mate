@@ -22,7 +22,7 @@ public class Session {
     private LocalDate date;
 
     @Column(nullable = false)
-    private String progressMade;
+    private Float progressAmount;
 
     @ManyToOne
     @JoinColumn(name = "goal_id", nullable = false)
