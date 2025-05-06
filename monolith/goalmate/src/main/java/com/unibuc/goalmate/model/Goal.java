@@ -42,6 +42,9 @@ public class Goal {
     @OneToMany(mappedBy = "goal", cascade = CascadeType.ALL)
     private List<Session> sessions;
 
+    @OneToMany(mappedBy = "goal", cascade = CascadeType.ALL)
+    private List<Achievement> achievements;
+
     @PrePersist
     private void ensureCurrentAmountDefault() {
         if (currentAmount == null) {

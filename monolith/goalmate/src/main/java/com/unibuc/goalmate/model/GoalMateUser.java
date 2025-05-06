@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -30,11 +31,11 @@ public class GoalMateUser {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Goal> goals;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "has",
+            name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "instructor_type_id")
+            inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private List<InstructorType> instructorTypeList;
+    private Set<Role> roles;
 }

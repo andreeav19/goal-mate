@@ -6,23 +6,28 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.time.LocalDate;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class InstructorType {
+public class Achievement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long instructorTypeId;
+    private Long achievementId;
 
     @Column(nullable = false)
-    private String type;
+    private String title;
 
-    private String description;
+    @Column(nullable = false)
+    private Float amountToReach;
 
-    @ManyToMany(mappedBy = "instructorTypeList")
-    private List<GoalMateUser> users;
+    @Column(nullable = false)
+    private LocalDate dateAwarded;
+
+    @ManyToOne
+    @JoinColumn(name = "goal_id", nullable = false)
+    private Goal goal;
 }
