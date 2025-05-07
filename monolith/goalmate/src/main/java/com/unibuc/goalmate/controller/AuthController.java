@@ -17,6 +17,12 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final AuthService authService;
 
+    @GetMapping("/register")
+    public String getRegister(Model model) {
+        model.addAttribute("message", "hello");
+        return "auth/register";
+    }
+
 //    @PostMapping("/register")
 //    public String register(@RequestBody @Valid RegisterRequestDto request) {
 //        return authService.register(request);
@@ -25,11 +31,5 @@ public class AuthController {
 //    @PostMapping("/login")
 //    public LoginResponseDto login(@RequestBody LoginRequestDto request) {
 //        return authService.login(request);
-//    }
-
-//    @GetMapping("/hello")
-//    public String sayHello(Model model) {
-//        model.addAttribute("message", "hello");
-//        return "helloPage";
 //    }
 }
