@@ -20,7 +20,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    private final JwtAuthFilter jwtAuthFilter;
+    private final UserDetailsServiceImpl userDetailsService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -30,11 +30,20 @@ public class SecurityConfig {
                         configurer
                                 .requestMatchers("/auth/register").permitAll()
                                 .requestMatchers("/auth/login").permitAll()
-                                .requestMatchers("/auth/hello").permitAll()
                                 .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .logout(LogoutConfigurer::permitAll);
+                .formLogin(form -> form
+                        .loginPage("/auth/login")
+                        .usernameParameter("email")
+                        .passwordParameter("password")
+                        .defaultSuccessUrl("/auth/hello", true)
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/auth/login?logout")
+                )
+                .userDetailsService(userDetailsService);
 
         return httpSecurity.build();
     }

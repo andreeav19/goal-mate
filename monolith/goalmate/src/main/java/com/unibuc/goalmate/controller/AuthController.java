@@ -1,6 +1,7 @@
 package com.unibuc.goalmate.controller;
 
 import com.unibuc.goalmate.dto.LoginRequestDto;
+import com.unibuc.goalmate.dto.LoginResponseDto;
 import com.unibuc.goalmate.dto.RegisterRequestDto;
 import com.unibuc.goalmate.service.AuthService;
 import jakarta.validation.Valid;
@@ -35,14 +36,12 @@ public class AuthController {
     }
 
     @GetMapping("/login")
-    public String login(Model model) {
-        model.addAttribute("loginRequest", new LoginRequestDto());
+    public String login() {
         return "auth/login";
     }
 
-//
-//    @PostMapping("/login")
-//    public LoginResponseDto login(@RequestBody LoginRequestDto registerRequest) {
-//        return authService.login(registerRequest);
-//    }
+    @GetMapping("/hello")
+    public String hello() {
+        return "auth/hello";
+    }
 }
