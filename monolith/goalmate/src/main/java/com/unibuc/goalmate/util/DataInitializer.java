@@ -6,12 +6,15 @@ import com.unibuc.goalmate.model.RoleName;
 import com.unibuc.goalmate.repository.GoalMateUserRepository;
 import com.unibuc.goalmate.repository.RoleRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,6 +35,7 @@ public class DataInitializer implements CommandLineRunner {
     private String adminEmail;
 
     @Override
+    @Transactional
     public void run(String... args) throws Exception {
         for (RoleName roleName : RoleName.values()) {
             if (!roleRepository.existsByRoleName(roleName)) {
@@ -49,6 +53,16 @@ public class DataInitializer implements CommandLineRunner {
             Role userRole = roleRepository.findByRoleName(RoleName.USER)
                     .orElseThrow(() -> new EntityNotFoundException("User role not found."));
 
+            Hibernate.initialize(adminRole.getUsers());
+            Hibernate.initialize(userRole.getUsers());
+
+            if (adminRole.getUsers() == null) {
+                adminRole.setUsers(new ArrayList<>());
+            }
+            if (userRole.getUsers() == null) {
+                userRole.setUsers(new ArrayList<>());
+            }
+
             adminUser.setRoles(new HashSet<>(Set.of(adminRole, userRole)));
             adminUser.setUsername(adminUsername);
             adminUser.setEmail(adminEmail);
@@ -58,8 +72,6 @@ public class DataInitializer implements CommandLineRunner {
             userRole.getUsers().add(adminUser);
 
             userRepository.save(adminUser);
-            roleRepository.save(userRole);
-            roleRepository.save(adminRole);
         }
     }
 }

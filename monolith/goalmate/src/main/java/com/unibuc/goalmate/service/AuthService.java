@@ -14,7 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +39,10 @@ public class AuthService {
         Role userRole = roleRepository.findByRoleName(RoleName.USER)
                         .orElseThrow(() -> new EntityNotFoundException("User role not found."));
         user.setRoles(Set.of(userRole));
+
+        if (userRole.getUsers() == null) {
+            userRole.setUsers(new ArrayList<>());
+        }
         userRole.getUsers().add(user);
 
         userRepository.save(user);
@@ -53,7 +59,12 @@ public class AuthService {
             throw new RuntimeException("Invalid credentials.");
         }
 
-        return new LoginResponseDto(jwtUtil.generateToken(user.getEmail()), user.getUserId());
+        Set<String> roles = user.getRoles().stream()
+                .map(role -> role.getRoleName().name())
+                .collect(Collectors.toSet());
+
+
+        return new LoginResponseDto(jwtUtil.generateToken(user.getEmail(), roles), user.getUserId());
     }
 
 }
