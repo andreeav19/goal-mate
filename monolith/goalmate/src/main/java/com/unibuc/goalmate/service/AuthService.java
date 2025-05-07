@@ -4,16 +4,23 @@ import com.unibuc.goalmate.dto.LoginRequestDto;
 import com.unibuc.goalmate.dto.LoginResponseDto;
 import com.unibuc.goalmate.dto.RegisterRequestDto;
 import com.unibuc.goalmate.model.GoalMateUser;
+import com.unibuc.goalmate.model.Role;
+import com.unibuc.goalmate.model.RoleName;
 import com.unibuc.goalmate.repository.GoalMateUserRepository;
+import com.unibuc.goalmate.repository.RoleRepository;
 import com.unibuc.goalmate.security.JwtUtil;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
     private final GoalMateUserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
@@ -26,8 +33,14 @@ public class AuthService {
         user.setEmail(requestDto.getEmail());
         user.setUsername(requestDto.getUsername());
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
+
+        Role userRole = roleRepository.findByRoleName(RoleName.USER)
+                        .orElseThrow(() -> new EntityNotFoundException("User role not found."));
+        user.setRoles(Set.of(userRole));
+        userRole.getUsers().add(user);
+
         userRepository.save(user);
-        //TODO: roles
+        roleRepository.save(userRole);
 
         return "User registered successfully!";
     }

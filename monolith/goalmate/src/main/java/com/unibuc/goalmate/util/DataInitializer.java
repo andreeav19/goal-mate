@@ -12,8 +12,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -49,7 +49,7 @@ public class DataInitializer implements CommandLineRunner {
             Role userRole = roleRepository.findByRoleName(RoleName.USER)
                     .orElseThrow(() -> new EntityNotFoundException("User role not found."));
 
-            adminUser.setRoles(new HashSet<>(Arrays.asList(adminRole, userRole)));
+            adminUser.setRoles(new HashSet<>(Set.of(adminRole, userRole)));
             adminUser.setUsername(adminUsername);
             adminUser.setEmail(adminEmail);
             adminUser.setPassword(passwordEncoder.encode(adminPassword));
@@ -58,6 +58,8 @@ public class DataInitializer implements CommandLineRunner {
             userRole.getUsers().add(adminUser);
 
             userRepository.save(adminUser);
+            roleRepository.save(userRole);
+            roleRepository.save(adminRole);
         }
     }
 }
