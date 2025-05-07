@@ -2,29 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Register</title>
+    <title>Login</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="container vh-100 d-flex justify-content-center align-items-center">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <h2 class="text-center mb-4">Register</h2>
+            <h2 class="text-center mb-4">Login</h2>
             <hr class="mb-4">
 
-            <form th:action="@{/auth/register}" th:object="${request}" method="post">
-                <div class="mb-3">
-                    <label for="inputUsername" class="form-label">Username</label>
-                    <input type="text" th:field="*{username}" class="form-control" id="inputUsername">
-                </div>
+            <form>
                 <div class="mb-3">
                     <label for="inputEmail" class="form-label">Email address</label>
-                    <input type="email" th:field="*{email}" class="form-control" id="inputEmail" aria-describedby="emailHelp">
+                    <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp">
                     <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
                 </div>
                 <div class="mb-3">
                     <label for="inputPassword" class="form-label">Password</label>
-                    <input type="password" th:field="*{password}" class="form-control" id="inputPassword" aria-describedby="passwordHelp">
+                    <input type="password" class="form-control" id="inputPassword" aria-describedby="passwordHelp">
                     <div id="passwordHelp" class="form-text">
                         Must be 8+ chars, with uppercase, lowercase, number and symbol.
                     </div>
