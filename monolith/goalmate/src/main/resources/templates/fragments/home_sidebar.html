@@ -25,10 +25,12 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="nav-link text-white fs-5 py-3">
+                <a href="#" class="nav-link text-white fs-5 py-3"
+                   onclick="document.getElementById('logoutForm').submit(); return false;">
                     <!--                    <svg class="bi me-2" width="16" height="16"><use xlink:href="#grid"></use></svg>-->
                     Logout
                 </a>
+                <form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;"></form>
             </li>
         </ul>
     </div>

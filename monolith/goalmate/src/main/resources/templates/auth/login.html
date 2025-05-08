@@ -9,6 +9,9 @@
             <h2 class="text-center mb-4">Enter credentials</h2>
             <hr class="mb-4">
 
+            <div th:if="${param.logout}" class="alert alert-success justify-content-center">
+                You have successfully logged out.
+            </div>
             <div th:if="${param.error}" class="alert alert-danger">
                 Invalid email or password.
             </div>
@@ -27,7 +30,6 @@
                     <button type="submit" class="btn btn-primary">Login</button>
                 </div>
             </form>
-
         </div>
         <div class="text-center mt-3">
             <br>
