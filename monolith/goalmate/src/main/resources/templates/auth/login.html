@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<th:block th:include="fragments/head_start :: head_start('Login')"></th:block>
+<th:block th:insert="~{fragments/head_start :: head_start('Login')}"></th:block>
 
 <body>
 <div class="container d-flex justify-content-center align-items-center vh-100">
@@ -37,6 +37,6 @@
 
 </div>
 
-<th:block th:include="fragments/script_end :: script_end"></th:block>
+<th:block th:insert="~{fragments/script_end :: script_end}"></th:block>
 </body>
 </html>
