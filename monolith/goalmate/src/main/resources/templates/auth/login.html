@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<th:block th:include="fragments/head_start :: head_start('Login')"></th:block>
+<th:block th:insert="~{fragments/head_start :: head_start('Login')}"></th:block>
 
 <body>
 <div class="container d-flex justify-content-center align-items-center vh-100">
@@ -9,6 +9,9 @@
             <h2 class="text-center mb-4">Enter credentials</h2>
             <hr class="mb-4">
 
+            <div th:if="${param.logout}" class="alert alert-success justify-content-center">
+                You have successfully logged out.
+            </div>
             <div th:if="${param.error}" class="alert alert-danger">
                 Invalid email or password.
             </div>
@@ -27,7 +30,6 @@
                     <button type="submit" class="btn btn-primary">Login</button>
                 </div>
             </form>
-
         </div>
         <div class="text-center mt-3">
             <br>
@@ -37,6 +39,6 @@
 
 </div>
 
-<th:block th:include="fragments/script_end :: script_end"></th:block>
+<th:block th:insert="~{fragments/script_end :: script_end}"></th:block>
 </body>
 </html>

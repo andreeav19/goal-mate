@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{fragments/head_start :: head_start('Home')}"></th:block>
+<body>
+
+    <th:block th:insert="~{fragments/home_sidebar :: home_sidebar('home', ${isAdmin})}"></th:block>
+
+<th:block th:insert="~{fragments/script_end :: script_end}"></th:block>
+</body>
+</html>
