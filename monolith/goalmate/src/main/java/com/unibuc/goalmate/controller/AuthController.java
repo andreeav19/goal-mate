@@ -1,7 +1,5 @@
 package com.unibuc.goalmate.controller;
 
-import com.unibuc.goalmate.dto.LoginRequestDto;
-import com.unibuc.goalmate.dto.LoginResponseDto;
 import com.unibuc.goalmate.dto.RegisterRequestDto;
 import com.unibuc.goalmate.service.AuthService;
 import jakarta.validation.Valid;
@@ -11,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-//@RestController
 @Controller
 @RequestMapping("/auth")
 @RequiredArgsConstructor
