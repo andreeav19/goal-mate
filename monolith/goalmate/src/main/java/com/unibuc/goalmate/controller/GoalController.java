@@ -9,22 +9,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
 @Controller
-@RequestMapping("/home")
+@RequestMapping("/home/goals")
 @RequiredArgsConstructor
 public class GoalController {
     private final AuthService authService;
     private final GoalService goalService;
     private final HobbyService hobbyService;
 
-    @GetMapping("/goals")
+    @GetMapping()
     public String getGoals(Model model, Principal principal) {
         String userEmail = principal.getName();
         model.addAttribute("goals", goalService.getGoalsByLoggedUser(userEmail));
@@ -33,7 +30,7 @@ public class GoalController {
         return "home/goal_page";
     }
 
-    @GetMapping("/goals/add")
+    @GetMapping("/add")
     public String getAddGoalPage(Model model) {
         model.addAttribute("isAdmin", authService.isCurrentUserAdmin());
         model.addAttribute("hobbies", hobbyService.getHobbyOptions());
@@ -41,7 +38,7 @@ public class GoalController {
         return "home/add_goal_page";
     }
 
-    @PostMapping("/goals/add")
+    @PostMapping("/add")
     public String addGoal(@ModelAttribute("goalRequest") @Valid GoalRequestDto request,
                           Principal principal, BindingResult result) {
         if (result.hasErrors()) {
@@ -50,5 +47,14 @@ public class GoalController {
 
         goalService.addGoalToLoggedUser(request, principal.getName());
         return "redirect:/home/goals";
+    }
+
+    @GetMapping("/{id}")
+    public String getEditGoalPage(@PathVariable Long id, Model model) {
+        model.addAttribute("isAdmin", authService.isCurrentUserAdmin());
+        model.addAttribute("goalRequest", goalService.getGoalById(id));
+        model.addAttribute("hobbies", hobbyService.getHobbyOptions());
+
+        return "home/edit_goal_page";
     }
 }

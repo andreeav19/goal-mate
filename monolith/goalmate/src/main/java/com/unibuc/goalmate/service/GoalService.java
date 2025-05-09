@@ -26,6 +26,8 @@ public class GoalService {
     public List<GoalResponseDto> getGoalsByLoggedUser(String userEmail) {
         return goalRepository.findByUser_Email(userEmail).stream()
                 .map(goal -> new GoalResponseDto(
+                        goal.getGoalId(),
+                        goal.getHobby().getHobbyId(),
                         goal.getHobby().getName(),
                         goal.getDescription(),
                         goal.getTargetAmount(),
@@ -64,5 +66,21 @@ public class GoalService {
         hobby.getGoals().add(goal);
 
         goalRepository.save(goal);
+    }
+
+    public GoalResponseDto getGoalById(Long goalId) {
+        Goal goal = goalRepository.findById(goalId).orElseThrow(
+                () -> new EntityNotFoundException("Goal not found."));
+
+        return new GoalResponseDto(
+                goal.getGoalId(),
+                goal.getHobby().getHobbyId(),
+                goal.getHobby().getName(),
+                goal.getDescription(),
+                goal.getTargetAmount(),
+                goal.getCurrentAmount(),
+                goal.getTargetUnit(),
+                goal.getDeadline()
+        );
     }
 }

@@ -12,6 +12,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GoalResponseDto {
+    private Long goalId;
+    private Long hobbyId;
     private String hobbyName;
     private String description;
     private Float targetAmount;
