@@ -8,6 +8,9 @@
         </div>
 
         <div class="flex-grow-1 px-3 mt-5">
+
+            <th:block th:insert="~{fragments/section_header :: script_end('Goal List', 'Add Goal', '/home/goals/add')}"></th:block>
+
             <div class="row row-cols-1 row-cols-md-4 g-4">
                 <div th:each="goal : ${goals}"  class="col">
                     <div class="card h-100">

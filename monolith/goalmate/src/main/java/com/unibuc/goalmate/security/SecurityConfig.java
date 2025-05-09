@@ -27,6 +27,7 @@ public class SecurityConfig {
                         configurer
                                 .requestMatchers("/auth/register").permitAll()
                                 .requestMatchers("/auth/login").permitAll()
+                                .requestMatchers("/home/goals/add").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
