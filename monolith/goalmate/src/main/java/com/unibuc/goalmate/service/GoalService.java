@@ -109,4 +109,15 @@ public class GoalService {
 
         goalRepository.save(goal);
     }
+
+    public void deleteGoal(Long goalId) {
+        Goal goal = goalRepository.findById(goalId).orElseThrow(
+                () -> new EntityNotFoundException("Goal not found."));
+
+        Hobby hobby = goal.getHobby();
+        hobby.getGoals().remove(goal);
+        hobbyRepository.save(hobby);
+
+        goalRepository.delete(goal);
+    }
 }

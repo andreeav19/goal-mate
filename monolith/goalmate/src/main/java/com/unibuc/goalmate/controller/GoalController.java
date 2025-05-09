@@ -62,7 +62,7 @@ public class GoalController {
         return "home/edit_goal_page";
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/edit/{id}")
     public String editGoal(@PathVariable Long id,
                            @ModelAttribute("goalRequest") @Valid GoalRequestDto request,
                            BindingResult bindingResult) {
@@ -76,6 +76,12 @@ public class GoalController {
 
         goalService.editGoal(id, request);
         logger.info("Successfully edited goal with ID {}", id);
+        return  "redirect:/home/goals";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String deleteGoal(@PathVariable Long id) {
+        goalService.deleteGoal(id);
         return  "redirect:/home/goals";
     }
 }

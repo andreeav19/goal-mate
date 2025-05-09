@@ -14,7 +14,7 @@
                 <h2 class="text-center mb-4">Edit Goal</h2>
                 <hr class="mb-4">
 
-                <form th:action="@{'/home/goals/' + ${goalRequest.goalId}}" th:object="${goalRequest}" method="post">
+                <form th:action="@{'/home/goals/edit/' + ${goalRequest.goalId}}" th:object="${goalRequest}" method="post">
                     <div class="mb-3">
                         <label for="selectHobby">Hobby</label>
                         <select th:field="*{hobbyId}" id="selectHobby" class="form-select" aria-label="Default select example">
