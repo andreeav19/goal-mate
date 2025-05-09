@@ -2,9 +2,41 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <th:block th:insert="~{fragments/head_start :: head_start('Home')}"></th:block>
 <body>
+    <div class="d-flex">
+        <div>
+        <th:block th:insert="~{fragments/home_sidebar :: home_sidebar('home', ${isAdmin})}"></th:block>
+        </div>
 
-    <th:block th:insert="~{fragments/home_sidebar :: home_sidebar('home', ${isAdmin})}"></th:block>
+        <div class="flex-grow-1 px-3 mt-5">
+            <div class="row row-cols-1 row-cols-md-4 g-4">
+                <div th:each="goal : ${goals}"  class="col">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${#strings.capitalize(goal.getHobbyName())} + ' Goal'">
+                                Hobby Goal
+                            </h5>
+                            <h6 class="card-subtitle mb-2 text-body-secondary"
+                                th:text="${goal.getDescription()}">
+                                No description
+                            </h6>
 
+                            <p class="card-text"
+                               th:text="'Progress: ' + ${goal.getCurrentAmount()} + ' out of ' + ${goal.getTargetAmount()} + ' ' + ${goal.getUnit()}">
+                                Progress made</p>
+                            <p class="card-text" th:text="'Deadline: ' + ${#temporals.format(goal.getDeadline(), 'dd MMMM yyyy')}">
+                                No target deadline.
+                            </p>
+
+                            <a href="#" class="card-link">View sessions</a>
+                            <a href="#" class="card-link">Edit</a>
+                            <a href="#" class="card-link">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 <th:block th:insert="~{fragments/script_end :: script_end}"></th:block>
 </body>
 </html>
