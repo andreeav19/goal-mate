@@ -83,4 +83,30 @@ public class GoalService {
                 goal.getDeadline()
         );
     }
+
+    public void editGoal(Long goalId, GoalRequestDto goalRequestDto) {
+        Goal goal = goalRepository.findById(goalId).orElseThrow(
+                () -> new EntityNotFoundException("Goal not found."));
+
+        goal.setDescription(goalRequestDto.getDescription());
+        goal.setTargetAmount(goalRequestDto.getTargetAmount());
+        goal.setTargetUnit(goalRequestDto.getUnit());
+        goal.setDeadline(goalRequestDto.getDeadline());
+
+        Hobby newHobby = hobbyRepository.findById(goalRequestDto.getHobbyId()).orElseThrow(
+                () -> new EntityNotFoundException("Hobby not found."));
+
+        Hobby oldHobby = goal.getHobby();
+
+        if (!newHobby.equals(oldHobby)) {
+            oldHobby.getGoals().remove(goal);
+            if (newHobby.getGoals() == null) {
+                newHobby.setGoals(new ArrayList<>());
+            }
+            newHobby.getGoals().add(goal);
+            goal.setHobby(newHobby);
+        }
+
+        goalRepository.save(goal);
+    }
 }
