@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{fragments/head_start :: head_start('Admin')}"></th:block>
+<body>
+<div class="d-flex">
+    <div>
+        <th:block th:insert="~{fragments/home_sidebar :: home_sidebar('admin', ${isAdmin})}"></th:block>
+    </div>
+
+    <div class="flex-grow-1 px-3 mt-5">
+
+        <th:block th:insert="~{fragments/section_header :: script_end('User List', null, null)}"></th:block>
+
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+        </div>
+    </div>
+
+</div>
+<th:block th:insert="~{fragments/script_end :: script_end}"></th:block>
+</body>
+</html>
