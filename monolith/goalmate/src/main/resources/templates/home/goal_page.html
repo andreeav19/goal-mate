@@ -19,14 +19,17 @@
                                 Hobby Goal
                             </h5>
                             <h6 class="card-subtitle mb-2 text-body-secondary"
-                                th:text="${goal.getDescription()}">
+                                th:text="${goal.description}">
                                 No description
                             </h6>
 
                             <p class="card-text"
-                               th:text="'Progress: ' + ${goal.getCurrentAmount()} + ' out of ' + ${goal.getTargetAmount()} + ' ' + ${goal.getUnit()}">
+                               th:text="'Progress: ' + ${goal.currentAmount} + ' out of ' + ${goal.targetAmount} + ' ' + ${goal.unit}">
                                 Progress made</p>
-                            <p class="card-text" th:text="'Deadline: ' + ${#temporals.format(goal.getDeadline(), 'dd MMMM yyyy')}">
+                            <p th:if="${goal.deadline} != null" class="card-text" th:text="'Deadline: ' + ${#temporals.format(goal.deadline, 'dd MMMM yyyy')}">
+                                No target deadline.
+                            </p>
+                            <p th:if="${goal.deadline} == null" class="card-text">
                                 No target deadline.
                             </p>
 
