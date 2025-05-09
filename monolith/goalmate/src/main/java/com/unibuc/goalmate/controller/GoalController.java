@@ -4,14 +4,13 @@ import com.unibuc.goalmate.dto.GoalRequestDto;
 import com.unibuc.goalmate.service.AuthService;
 import com.unibuc.goalmate.service.GoalService;
 import com.unibuc.goalmate.service.HobbyService;
+import com.unibuc.goalmate.util.UtilLogger;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.security.Principal;
 
@@ -19,8 +18,6 @@ import java.security.Principal;
 @RequestMapping("/home/goals")
 @RequiredArgsConstructor
 public class GoalController {
-    private static final Logger logger = LoggerFactory.getLogger(GoalController.class);
-
     private final AuthService authService;
     private final GoalService goalService;
     private final HobbyService hobbyService;
@@ -44,8 +41,9 @@ public class GoalController {
 
     @PostMapping("/add")
     public String addGoal(@ModelAttribute("goalRequest") @Valid GoalRequestDto request,
-                          Principal principal, BindingResult result) {
-        if (result.hasErrors()) {
+                          Principal principal, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            UtilLogger.logBindingResultErrors(bindingResult, "Error while adding goal to logged user.");
             return "redirect:/home/goals/add?error";
         }
 
@@ -67,15 +65,11 @@ public class GoalController {
                            @ModelAttribute("goalRequest") @Valid GoalRequestDto request,
                            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            logger.warn("Validation errors occurred while editing goal with ID {}:", id);
-            bindingResult.getAllErrors().forEach(error ->
-                    logger.warn(" - {}", error.getDefaultMessage())
-            );
+            UtilLogger.logBindingResultErrors(bindingResult, "Error while editing goal with id " + id);
             return "redirect:/home/goals/edit";
         }
 
         goalService.editGoal(id, request);
-        logger.info("Successfully edited goal with ID {}", id);
         return  "redirect:/home/goals";
     }
 
