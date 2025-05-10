@@ -56,7 +56,9 @@
                             </button>
                             <ul class="dropdown-menu">
                                 <li th:each="role : ${user.unassignedRoles}">
-                                    <form method="post" th:action="@{/admin/add-role}" th:object="${userRole}">
+                                    <form method="post" th:action="@{/admin/add-role}">
+                                        <input type="hidden" name="roleName" th:value="${role}"/>
+                                        <input type="hidden" name="userId" th:value="${user.userId}"/>
                                         <button type="submit" class="dropdown-item" th:value="${role}" th:text="${role}"></button>
                                     </form>
                                 </li>
