@@ -2,6 +2,7 @@ package com.unibuc.goalmate.controller;
 
 import com.unibuc.goalmate.dto.RegisterRequestDto;
 import com.unibuc.goalmate.service.AuthService;
+import com.unibuc.goalmate.util.UtilLogger;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -22,9 +23,9 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(@ModelAttribute("registerRequest") @Valid RegisterRequestDto request, BindingResult result) {
-        if (result.hasErrors()) {
-            System.out.println(result.getAllErrors());
+    public String register(@ModelAttribute("registerRequest") @Valid RegisterRequestDto request, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            UtilLogger.logBindingResultErrors(bindingResult, "Error registering new user.");
             return "auth/register";
         }
 
@@ -37,4 +38,8 @@ public class AuthController {
         return "auth/login";
     }
 
+    @GetMapping("/access-denied")
+    public String getAccessDeniedPage() {
+        return "auth/access_denied";
+    }
 }

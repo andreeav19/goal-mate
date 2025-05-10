@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{fragments/head_start :: head_start('Add Goal')}"></th:block>
+
+<body>
+<div class="d-flex">
+    <div>
+        <th:block th:insert="~{fragments/home_sidebar :: home_sidebar('home', ${isAdmin})}"></th:block>
+    </div>
+
+    <div class="flex-grow-1 px-3 mt-5">
+        <div class="row justify-content-center w-100">
+            <div class="col-md-4 mt-5">
+                <h2 class="text-center mb-4">Add Goal</h2>
+                <hr class="mb-4">
+
+                <form th:action="@{/home/goals/add}" th:object="${goalRequest}" method="post">
+                    <div class="mb-3">
+                        <label for="selectHobby">Hobby</label>
+                        <select th:field="*{hobbyId}" id="selectHobby" class="form-select" aria-label="Default select example">
+                            <option th:each="hobby : ${hobbies}" th:value="${hobby.hobbyId}" th:text="${#strings.capitalize(hobby.hobbyName)}"></option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="inputDescription" class="form-label">Description</label>
+                        <input type="text" th:field="*{description}" class="form-control" id="inputDescription">
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputUnit" class="form-label">Unit</label>
+                        <input type="text" th:field="*{unit}" class="form-control" id="inputUnit" aria-describedby="unitHelp">
+                        <div id="unitHelp" class="form-text">
+                            The way to measure progress made (e.g. "hours"/"days"/"drawings"/"pages").
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputTargetAmount" class="form-label">Target Amount</label>
+                        <input type="number" th:field="*{targetAmount}" step="0.01" min="0.0" class="form-control" id="inputTargetAmount">
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputDeadline" class="form-label">Target Date</label>
+                        <input type="date" th:field="*{deadline}" id="inputDeadline" name="targetDate" class="form-control" />
+                    </div>
+
+                    <br>
+
+                    <div class="text-center">
+                        <a th:href="@{/home/goals}"
+                           class="btn btn-primary w-25">
+                            <span>Cancel</span>
+                        </a>
+                        <button type="submit" class="btn btn-primary w-25">Add</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:insert="~{fragments/script_end :: script_end}"></th:block>
+</body>
+</html>

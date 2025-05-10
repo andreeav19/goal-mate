@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{fragments/head_start :: head_start('Admin')}"></th:block>
+<body>
+<div class="d-flex">
+    <div>
+        <th:block th:insert="~{fragments/home_sidebar :: home_sidebar('admin', ${isAdmin})}"></th:block>
+    </div>
+
+    <div class="flex-grow-1 px-3 mt-5">
+
+        <th:block th:insert="~{fragments/section_header :: script_end('User List', null, null)}"></th:block>
+
+        <div class="w-75 ms-5">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Roles</th>
+                    <th scope="col">Edit roles</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user, iter : ${users}">
+                    <th scope="row" th:text="${iter.index + 1}"></th>
+                    <td th:text="${user.username}">Username</td>
+                    <td th:text="${user.email}">Email</td>
+                    <td>
+                        <div th:if="${user.isModifiable}" class="d-flex flex-wrap gap-2">
+                            <div th:each="role : ${user.roles}" class="position-relative">
+                            <span class="badge rounded-pill pe-4"
+                                  th:classappend="${role == 'ADMIN' ? 'text-bg-info' : 'text-bg-secondary'}"
+                                  style="position: relative; padding-right: 1.5rem;">
+                                <span th:text="${role}"></span>
+
+                                <form method="post" th:action="@{/admin/delete-role}"
+                                      style="position: absolute; top: 0.15rem; right: 0.4rem; margin: 0;">
+                                    <input type="hidden" name="roleName" th:value="${role}"/>
+                                    <input type="hidden" name="userId" th:value="${user.userId}"/>
+                                    <button type="submit"
+                                            class="btn p-0 m-0 border-0 bg-transparent text-white"
+                                            style="font-size: 0.75rem; line-height: 1;">×</button>
+                                </form>
+                            </span>
+                            </div>
+                        </div>
+
+                        <div th:if="${!user.isModifiable}" class="d-flex flex-wrap gap-2">
+                            <div th:each="role : ${user.roles}" class="position-relative">
+                            <span class="badge rounded-pill pe-4"
+                                  th:classappend="${role == 'ADMIN' ? 'text-bg-info' : 'text-bg-secondary'}"
+                                  style="position: relative; padding-right: 1.5rem;">
+                                <span th:text="${role}"></span>
+                            </span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div th:if="${user.isModifiable}">
+                            <div th:if="${user.unassignedRoles != null and !user.unassignedRoles.isEmpty()}"
+                                 class="btn-group dropend">
+                                <button type="button" class="btn btn-secondary dropdown-toggle"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                    Add role
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li th:each="role : ${user.unassignedRoles}">
+                                        <form method="post" th:action="@{/admin/add-role}">
+                                            <input type="hidden" name="roleName" th:value="${role}"/>
+                                            <input type="hidden" name="userId" th:value="${user.userId}"/>
+                                            <button type="submit" class="dropdown-item" th:value="${role}" th:text="${role}"></button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div th:if="${user.unassignedRoles == null or user.unassignedRoles.isEmpty()}">
+                                <p>No roles available.</p>
+                            </div>
+                        </div>
+
+                        <div th:if="${!user.isModifiable}">
+                            <p>Cannot edit roles.</p>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+<th:block th:insert="~{fragments/script_end :: script_end}"></th:block>
+</body>
+</html>
