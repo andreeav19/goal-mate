@@ -10,6 +10,7 @@ import com.unibuc.goalmate.model.Hobby;
 import com.unibuc.goalmate.repository.GoalMateUserRepository;
 import com.unibuc.goalmate.repository.GoalRepository;
 import com.unibuc.goalmate.repository.HobbyRepository;
+import com.unibuc.goalmate.util.UtilLogger;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -128,11 +129,12 @@ public class GoalService {
                 () -> new EntityNotFoundException("Goal not found.")
         );
 
-
         return new GoalSessionsResponseDto(
                 goalId,
                 goal.getHobby().getName(),
                 goal.getTargetUnit(),
+                goal.getTargetAmount(),
+                goal.getCurrentAmount(),
                 goal.getSessions().stream().map(
                         session -> new SessionResponseDto(
                                 session.getSessionId(),

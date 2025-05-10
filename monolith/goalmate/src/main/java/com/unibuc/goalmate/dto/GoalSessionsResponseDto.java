@@ -15,5 +15,7 @@ public class GoalSessionsResponseDto {
     private Long goalId;
     private String goalName;
     private String unit;
+    private Float targetAmount;
+    private Float currentAmount;
     private List<SessionResponseDto> sessions;
 }
