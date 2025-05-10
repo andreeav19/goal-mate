@@ -28,7 +28,7 @@
                     <td th:text="${user.username}">Username</td>
                     <td th:text="${user.email}">Email</td>
                     <td>
-                        <div class="d-flex flex-wrap gap-2">
+                        <div th:if="${user.isModifiable}" class="d-flex flex-wrap gap-2">
                             <div th:each="role : ${user.roles}" class="position-relative">
                             <span class="badge rounded-pill pe-4"
                                   th:classappend="${role == 'ADMIN' ? 'text-bg-info' : 'text-bg-secondary'}"
@@ -46,27 +46,43 @@
                             </span>
                             </div>
                         </div>
+
+                        <div th:if="${!user.isModifiable}" class="d-flex flex-wrap gap-2">
+                            <div th:each="role : ${user.roles}" class="position-relative">
+                            <span class="badge rounded-pill pe-4"
+                                  th:classappend="${role == 'ADMIN' ? 'text-bg-info' : 'text-bg-secondary'}"
+                                  style="position: relative; padding-right: 1.5rem;">
+                                <span th:text="${role}"></span>
+                            </span>
+                            </div>
+                        </div>
                     </td>
                     <td>
-                        <div th:if="${user.unassignedRoles != null and !user.unassignedRoles.isEmpty()}"
-                             class="btn-group dropend">
-                            <button type="button" class="btn btn-secondary dropdown-toggle"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                Add role
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li th:each="role : ${user.unassignedRoles}">
-                                    <form method="post" th:action="@{/admin/add-role}">
-                                        <input type="hidden" name="roleName" th:value="${role}"/>
-                                        <input type="hidden" name="userId" th:value="${user.userId}"/>
-                                        <button type="submit" class="dropdown-item" th:value="${role}" th:text="${role}"></button>
-                                    </form>
-                                </li>
-                            </ul>
+                        <div th:if="${user.isModifiable}">
+                            <div th:if="${user.unassignedRoles != null and !user.unassignedRoles.isEmpty()}"
+                                 class="btn-group dropend">
+                                <button type="button" class="btn btn-secondary dropdown-toggle"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                    Add role
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li th:each="role : ${user.unassignedRoles}">
+                                        <form method="post" th:action="@{/admin/add-role}">
+                                            <input type="hidden" name="roleName" th:value="${role}"/>
+                                            <input type="hidden" name="userId" th:value="${user.userId}"/>
+                                            <button type="submit" class="dropdown-item" th:value="${role}" th:text="${role}"></button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div th:if="${user.unassignedRoles == null or user.unassignedRoles.isEmpty()}">
+                                <p>No roles available.</p>
+                            </div>
                         </div>
 
-                        <div th:if="${user.unassignedRoles == null or user.unassignedRoles.isEmpty()}">
-                            <p>No roles available</p>
+                        <div th:if="${!user.isModifiable}">
+                            <p>Cannot edit roles.</p>
                         </div>
                     </td>
                 </tr>

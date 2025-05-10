@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.security.Principal;
+
 @Controller
 @RequestMapping("/admin")
 @RequiredArgsConstructor
@@ -22,9 +24,9 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping()
-    public String getAllUsers(Model model) {
+    public String getAllUsers(Model model, Principal principal) {
         model.addAttribute("isAdmin", authService.isCurrentUserAdmin());
-        model.addAttribute("users", userService.getAllUsers());
+        model.addAttribute("users", userService.getAllUsers(principal.getName()));
         model.addAttribute("userRoleRequest", new UserRoleRequestDto());
         return "admin/users";
     }

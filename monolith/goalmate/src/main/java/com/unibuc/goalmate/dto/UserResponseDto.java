@@ -17,4 +17,5 @@ public class UserResponseDto {
     private String email;
     List<String> roles;
     List<String> unassignedRoles;
+    private Boolean isModifiable;
 }

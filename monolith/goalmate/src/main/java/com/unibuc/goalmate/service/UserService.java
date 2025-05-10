@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ public class UserService {
     private final GoalMateUserRepository userRepository;
     private final RoleRepository roleRepository;
 
-    public List<UserResponseDto> getAllUsers() {
+    public List<UserResponseDto> getAllUsers(String userEmail) {
         return userRepository.findAll().stream().map(
                 user -> {
                     List<String> userRoles = user.getRoles().stream()
@@ -36,12 +37,15 @@ public class UserService {
                             .filter(role -> !userRoles.contains(role))
                             .toList();
 
+                    boolean isModifiable = !Objects.equals(userEmail, user.getEmail()) && user.getUserId() != 1;
+
                     return new UserResponseDto(
                             user.getUserId(),
                             user.getUsername(),
                             user.getEmail(),
                             userRoles,
-                            missingRoles
+                            missingRoles,
+                            isModifiable
                     );
                 }
         ).toList();
