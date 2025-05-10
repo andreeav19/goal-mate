@@ -33,7 +33,7 @@
                                 No target deadline.
                             </p>
 
-                            <a href="#" class="card-link">View sessions</a>
+                            <a th:href="@{/home/goals/{id}/sessions(id=${goal.goalId})}" class="card-link">View sessions</a>
                             <a th:href="@{/home/goals/{id}(id=${goal.goalId})}" class="card-link">Edit</a>
                             <form th:action="@{/home/goals/delete/{id}(id=${goal.goalId})}" method="POST" style="display: inline;">
                                 <input type="hidden" name="_method" value="DELETE">

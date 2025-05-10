@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{fragments/head_start :: head_start('Goal Sessions')}"></th:block>
+<body>
+<div class="d-flex">
+    <div>
+        <th:block th:insert="~{fragments/home_sidebar :: home_sidebar('home', ${isAdmin})}"></th:block>
+    </div>
+
+    <div class="flex-grow-1 px-3 mt-5">
+
+        <th:block th:insert="~{fragments/section_header :: script_end(
+            ${#strings.capitalize(goalSessions.goalName)} + ' Session List',
+            'Add Session',
+            '/home/goals/' + ${goalSessions.goalId} + '/sessions/add'
+        )}"></th:block>
+
+        <div class="w-75 ms-5">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">Session</th>
+                    <th scope="col">Date Completed</th>
+                    <th scope="col">Progress Made</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="goalSession, iter : ${goalSessions.sessions}">
+                    <th scope="row" th:text="${iter.index + 1}"></th>
+                    <td th:text="${goalSession.date}">Date</td>
+                    <td th:text="${goalSession.progressAmount}">Progress</td>
+                    <td>Actions</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+<!--        <a th:href="@{/home/goals/sessions/{id}(id=${goalSession.sessionId})}" class="card-link">Edit</a>-->
+<!--        <form th:action="@{/home/goals/sessions/delete/{id}(id=${goalSession.sessionId})}"-->
+<!--              method="POST" style="display: inline;">-->
+<!--            <input type="hidden" name="_method" value="DELETE">-->
+<!--            <button type="submit" style="background: none; border: none; color: #ff0044;-->
+<!--                              text-decoration: underline; cursor: pointer;">-->
+<!--                Delete-->
+<!--            </button>-->
+<!--        </form>-->
+    </div>
+
+</div>
+<th:block th:insert="~{fragments/script_end :: script_end}"></th:block>
+</body>
+</html>
