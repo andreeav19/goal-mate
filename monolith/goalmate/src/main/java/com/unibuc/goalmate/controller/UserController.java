@@ -42,4 +42,16 @@ public class UserController {
         userService.addUserRole(requestDto);
         return "redirect:/admin";
     }
+
+    @PostMapping("/delete-role")
+    public String deleteRole(@ModelAttribute("userRoleRequest") @Valid UserRoleRequestDto requestDto,
+                          BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            UtilLogger.logBindingResultErrors(bindingResult, "Could not delete role from user.");
+            return "redirect:/admin";
+        }
+
+        userService.deleteUserRole(requestDto);
+        return "redirect:/admin";
+    }
 }

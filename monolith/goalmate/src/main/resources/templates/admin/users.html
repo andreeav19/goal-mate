@@ -35,10 +35,10 @@
                                   style="position: relative; padding-right: 1.5rem;">
                                 <span th:text="${role}"></span>
 
-                                <form method="post"
+                                <form method="post" th:action="@{/admin/delete-role}"
                                       style="position: absolute; top: 0.15rem; right: 0.4rem; margin: 0;">
-                                    <input type="hidden" id="userIdDel" />
-                                    <input type="hidden" id="roleIdDel" />
+                                    <input type="hidden" name="roleName" th:value="${role}"/>
+                                    <input type="hidden" name="userId" th:value="${user.userId}"/>
                                     <button type="submit"
                                             class="btn p-0 m-0 border-0 bg-transparent text-white"
                                             style="font-size: 0.75rem; line-height: 1;">×</button>

@@ -70,4 +70,22 @@ public class UserService {
         roleRepository.save(role);
         userRepository.save(user);
     }
+
+    public void deleteUserRole(UserRoleRequestDto requestDto) {
+        GoalMateUser user = userRepository.findById(requestDto.getUserId()).orElseThrow(
+                () -> new EntityNotFoundException("User not found.")
+        );
+
+        Role role = roleRepository.findByRoleName(RoleName.valueOf(requestDto.getRoleName())).orElseThrow(
+                () -> new EntityNotFoundException("Role not found.")
+        );
+
+        if (!user.getRoles().contains(role)) return;
+
+        role.getUsers().remove(user);
+        user.getRoles().remove(role);
+
+        roleRepository.save(role);
+        userRepository.save(user);
+    }
 }
