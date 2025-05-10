@@ -18,7 +18,7 @@ public class Hobby {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long hobbyId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     private String description;
