@@ -6,4 +6,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface HobbyRepository extends JpaRepository<Hobby, Long> {
+
+    void deleteByName(String name);
+
+    boolean existsByName(String name);
+
 }
