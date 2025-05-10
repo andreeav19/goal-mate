@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{fragments/head_start :: head_start('Add Hobby')}"></th:block>
+
+<body>
+<div class="d-flex">
+  <div>
+    <th:block th:insert="~{fragments/home_sidebar :: home_sidebar('hobbies', ${isAdmin})}"></th:block>
+  </div>
+
+  <div class="flex-grow-1 px-3 mt-5">
+    <div class="row justify-content-center w-100">
+      <div class="col-md-4 mt-5">
+        <h2 class="text-center mb-4">Add Hobby</h2>
+        <hr class="mb-4">
+
+        <div th:if="${errorMessage}" class="alert alert-danger text-center" role="alert">
+          <p th:text="${errorMessage}"></p>
+        </div>
+
+        <form th:action="@{/hobbies/add-hobby}" th:object="${hobbyRequest}" method="post">
+          <div class="mb-3">
+            <label for="inputName" class="form-label">Name</label>
+            <input type="text" th:field="*{name}" class="form-control" id="inputName" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="inputDescription" class="form-label">Description</label>
+            <input type="text" th:field="*{description}" class="form-control" id="inputDescription">
+          </div>
+
+          <div class="text-center">
+            <a th:href="@{/hobbies}" class="btn btn-primary w-25">Cancel</a>
+            <button type="submit" class="btn btn-primary w-25">Add</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<th:block th:insert="~{fragments/script_end :: script_end}"></th:block>
+</body>
+</html>
