@@ -9,7 +9,7 @@
 
     <div class="flex-grow-1 px-3 mt-5">
 
-        <th:block th:insert="~{fragments/section_header :: script_end(
+        <th:block th:insert="~{fragments/section_header :: section_header(
             ${#strings.capitalize(goalSessions.goalName)} + ' Session List',
             'Add Session',
             '/home/goals/' + ${goalSessions.goalId} + '/sessions/add'
