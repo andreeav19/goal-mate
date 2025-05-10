@@ -43,4 +43,24 @@ public class SessionService {
         sessionRepository.save(session);
         goalRepository.save(goal);
     }
+
+    public void deleteSessionFromGoal(Long goalId, Long sessionId) {
+        Goal goal = goalRepository.findById(goalId).orElseThrow(
+                () -> new EntityNotFoundException("Goal not found."));
+
+        Session session = sessionRepository.findById(sessionId).orElseThrow(
+                () -> new EntityNotFoundException("Session not found."));
+
+        if (!session.getGoal().getGoalId().equals(goalId)) {
+            throw new IllegalArgumentException("Session does not belong to specified goal.");
+        }
+
+        goal.setCurrentAmount(
+                goal.getCurrentAmount() - session.getProgressAmount()
+        );
+        goal.getSessions().remove(session);
+        goalRepository.save(goal);
+
+        sessionRepository.delete(session);
+    }
 }

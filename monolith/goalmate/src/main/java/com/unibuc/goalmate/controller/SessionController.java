@@ -48,4 +48,10 @@ public class SessionController {
         sessionService.addSessionToGoal(id, requestDto);
         return "redirect:/home/goals/" + id + "/sessions";
     }
+
+    @PostMapping("/delete/{sessionId}")
+    public String deleteSession(@PathVariable Long id, @PathVariable Long sessionId) {
+        sessionService.deleteSessionFromGoal(id, sessionId);
+        return "redirect:/home/goals/" + id + "/sessions";
+    }
 }

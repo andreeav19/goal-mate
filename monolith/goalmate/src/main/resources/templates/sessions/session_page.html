@@ -31,7 +31,7 @@
                     <th scope="col">Session</th>
                     <th scope="col">Date Completed</th>
                     <th scope="col">Progress Made</th>
-                    <th scope="col">Actions</th>
+                    <th scope="col">Delete</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -39,7 +39,16 @@
                     <th scope="row" th:text="${iter.index + 1}"></th>
                     <td th:text="${goalSession.date}">Date</td>
                     <td th:text="${goalSession.progressAmount}">Progress</td>
-                    <td>Actions</td>
+                    <td>
+                        <form
+                            th:action="@{
+                                /home/goals/{id}/sessions/delete/{sessionId}
+                                (id=${goalSessions.goalId}, sessionId=${goalSession.sessionId})
+                            }"
+                            method="post">
+                            <button type="submit" class="btn btn-sm btn-danger">&minus;</button>
+                        </form>
+                    </td>
                 </tr>
                 </tbody>
             </table>
