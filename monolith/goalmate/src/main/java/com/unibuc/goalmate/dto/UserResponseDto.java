@@ -16,4 +16,5 @@ public class UserResponseDto {
     private String username;
     private String email;
     List<String> roles;
+    List<String> unassignedRoles;
 }
