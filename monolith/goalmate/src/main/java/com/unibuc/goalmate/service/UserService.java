@@ -21,7 +21,9 @@ public class UserService {
                         user.getEmail(),
                         user.getRoles().stream().map(
                                 role -> role.getRoleName().name()
-                        ).collect(Collectors.toList())
+                        )
+                                .sorted()
+                                .collect(Collectors.toList())
                 )
         ).collect(Collectors.toList());
     }

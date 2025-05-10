@@ -21,7 +21,7 @@ public class UserController {
     public String getAllUsers(Model model) {
         model.addAttribute("isAdmin", authService.isCurrentUserAdmin());
         model.addAttribute("users", userService.getAllUsers());
-        model.addAttribute("roles", roleService.getAllRoles());
+//        model.addAttribute("roles", roleService.getAllRoles());
         return "admin/users";
     }
 }
