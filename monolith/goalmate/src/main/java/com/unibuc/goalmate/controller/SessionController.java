@@ -41,13 +41,15 @@ public class SessionController {
     }
 
     @PostMapping("/add")
-    public String addSession(@PathVariable Long id,
+    public String addSession(@PathVariable Long id, Model model,
                              @ModelAttribute("sessionRequest") SessionRequestDto requestDto,
                              BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             UtilLogger.logBindingResultErrors(
                     bindingResult, "Could not add session to goal with id " + id);
-            return "redirect:/home/goals/" + id + "/sessions";
+            model.addAttribute("errors", bindingResult.getAllErrors());
+
+            return "sessions/add_session_page";
         }
 
         sessionService.addSessionToGoal(id, requestDto);

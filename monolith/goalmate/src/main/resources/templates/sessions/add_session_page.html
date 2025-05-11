@@ -13,17 +13,18 @@
             <div class="col-md-4 mt-5">
                 <h2 class="text-center mb-4">Add Session</h2>
                 <hr class="mb-4">
+                <th:block th:insert="~{fragments/section_error :: section_error(${errors})}"></th:block>
 
                 <form th:action="@{/home/goals/{id}/sessions/add(id=${goalId})}" th:object="${sessionRequest}" method="post">
                     <div class="mb-3">
                         <label for="inputAmount" class="form-label">Progress Amount</label>
                         <input type="number" th:field="*{progressAmount}" step="0.01" min="0.1" th:max="${goalTarget}"
-                               class="form-control" id="inputAmount">
+                               class="form-control" id="inputAmount" required>
                     </div>
                     <div class="mb-3">
                         <label for="inputDate" class="form-label">Completed Date</label>
                         <input type="date" th:field="*{date}" id="inputDate" name="inputDate" class="form-control"
-                               th:min="${today}" th:max="${goalDeadline}"/>
+                               th:max="${goalDeadline}" required/>
                     </div>
 
                     <br>

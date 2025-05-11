@@ -44,10 +44,12 @@ public class GoalController {
 
     @PostMapping("/add")
     public String addGoal(@ModelAttribute("goalRequest") @Valid GoalRequestDto request,
-                          Principal principal, BindingResult bindingResult) {
+                          BindingResult bindingResult, Principal principal, Model model) {
         if (bindingResult.hasErrors()) {
             UtilLogger.logBindingResultErrors(bindingResult, "Error while adding goal to logged user.");
-            return "redirect:/home/goals/add?error";
+            model.addAttribute("errors", bindingResult.getAllErrors());
+
+            return "home/add_goal_page";
         }
 
         goalService.addGoalToLoggedUser(request, principal.getName());
@@ -65,12 +67,14 @@ public class GoalController {
     }
 
     @PostMapping("/edit/{id}")
-    public String editGoal(@PathVariable Long id,
+    public String editGoal(@PathVariable Long id, Model model,
                            @ModelAttribute("goalRequest") @Valid GoalRequestDto request,
                            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             UtilLogger.logBindingResultErrors(bindingResult, "Error while editing goal with id " + id);
-            return "redirect:/home/goals/edit";
+            model.addAttribute("errors", bindingResult.getAllErrors());
+
+            return "home/edit_goal_page";
         }
 
         goalService.editGoal(id, request);

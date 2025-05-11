@@ -13,6 +13,7 @@
             <div class="col-md-4 mt-5">
                 <h2 class="text-center mb-4">Edit Goal</h2>
                 <hr class="mb-4">
+                <th:block th:insert="~{fragments/section_error :: section_error(${errors})}"></th:block>
 
                 <form th:action="@{'/home/goals/edit/' + ${goalRequest.goalId}}" th:object="${goalRequest}" method="post">
                     <div class="mb-3">
@@ -28,14 +29,16 @@
                     </div>
                     <div class="mb-3">
                         <label for="inputUnit" class="form-label">Unit</label>
-                        <input type="text" th:field="*{unit}" class="form-control" id="inputUnit" aria-describedby="unitHelp">
+                        <input type="text" th:field="*{unit}" class="form-control" id="inputUnit"
+                               aria-describedby="unitHelp" required>
                         <div id="unitHelp" class="form-text">
                             The way to measure progress made (e.g. "hours"/"days"/"drawings"/"pages").
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="inputTargetAmount" class="form-label">Target Amount</label>
-                        <input type="number" th:field="*{targetAmount}" step="0.01" min="1.0" class="form-control" id="inputTargetAmount">
+                        <input type="number" th:field="*{targetAmount}" step="0.01" min="1.0" class="form-control"
+                               id="inputTargetAmount" required>
                     </div>
                     <div class="mb-3">
                         <label for="inputDeadline" class="form-label">Target Date</label>

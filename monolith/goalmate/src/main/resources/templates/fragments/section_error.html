@@ -1,0 +1,6 @@
+<!--/* @thymesVar id="errors" type="java.util.List<org.springframework.validation.ObjectError>" */-->
+<div th:fragment="section_error(errors)"
+     th:if="${errors != null and errors.isEmpty() != 0}"
+     class="alert alert-danger">
+    <p th:each="error : ${errors}" th:text="${error.defaultMessage}"></p>
+</div>
