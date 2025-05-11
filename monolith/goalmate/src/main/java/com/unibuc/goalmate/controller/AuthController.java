@@ -23,14 +23,16 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(@ModelAttribute("registerRequest") @Valid RegisterRequestDto request, BindingResult bindingResult) {
+    public String register(@ModelAttribute("registerRequest") @Valid RegisterRequestDto request,
+                           BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             UtilLogger.logBindingResultErrors(bindingResult, "Error registering new user.");
+            model.addAttribute("errors", bindingResult.getAllErrors());
             return "auth/register";
         }
 
         authService.register(request);
-        return "redirect:/auth/login";
+        return "redirect:/auth/login?success";
     }
 
     @GetMapping("/login")
@@ -40,6 +42,6 @@ public class AuthController {
 
     @GetMapping("/access-denied")
     public String getAccessDeniedPage() {
-        return "auth/access_denied";
+        return "error/access_denied";
     }
 }

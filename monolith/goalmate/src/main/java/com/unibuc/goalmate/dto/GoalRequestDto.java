@@ -2,6 +2,7 @@ package com.unibuc.goalmate.dto;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,6 +26,7 @@ public class GoalRequestDto {
     private Float targetAmount;
 
     @NotNull(message = "Unit for progress must be completed.")
+    @NotEmpty(message = "Unit for progress must be completed.")
     private String unit;
 
     @FutureOrPresent(message = "Deadline cannot be in the past.")

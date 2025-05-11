@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<th:block th:insert="~{fragments/head_start :: head_start('Error Page')}"></th:block>
+
+<body>
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="row justify-content-center w-100">
+        <div class="col-md-4">
+            <h2 class="text-center mb-4">Something went wrong</h2>
+
+            <div th:if="${errorMessage != null and !#strings.isEmpty(errorMessage)}" th:text="${errorMessage}"
+                 class="alert alert-danger text-center">
+                Error message.
+            </div>
+            <div th:if="${errorMessage == null or #strings.isEmpty(errorMessage)}"
+                 class="alert alert-danger text-center">
+                Unexpected error.
+            </div>
+
+        </div>
+        <div class="text-center mt-3">
+            <br>
+            <p>Click <a th:href="@{/home/goals}">here</a> to return to the home page.</p>
+        </div>
+    </div>
+
+</div>
+
+<th:block th:insert="~{fragments/script_end :: script_end}"></th:block>
+</body>
+</html>

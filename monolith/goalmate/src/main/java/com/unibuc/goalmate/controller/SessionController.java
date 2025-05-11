@@ -30,24 +30,18 @@ public class SessionController {
 
     @GetMapping("/add")
     public String getAddSessionPage(@PathVariable Long id, Model model) {
-        model.addAttribute("sessionRequest", new SessionRequestDto());
-        model.addAttribute("isAdmin", authService.isCurrentUserAdmin());
-        model.addAttribute("goalId", id);
-        model.addAttribute("sessionRequest", new SessionRequestDto());
-        model.addAttribute("goalDeadline", goalService.getGoalDeadline(id));
-        model.addAttribute("goalTarget", goalService.getGoalTargetAmount(id));
-        model.addAttribute("today", LocalDate.now());
-        return "sessions/add_session_page";
+        return addSessionModelAttributes(id, model);
     }
 
     @PostMapping("/add")
-    public String addSession(@PathVariable Long id,
+    public String addSession(@PathVariable Long id, Model model,
                              @ModelAttribute("sessionRequest") SessionRequestDto requestDto,
                              BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             UtilLogger.logBindingResultErrors(
                     bindingResult, "Could not add session to goal with id " + id);
-            return "redirect:/home/goals/" + id + "/sessions";
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            return addSessionModelAttributes(id, model);
         }
 
         sessionService.addSessionToGoal(id, requestDto);
@@ -58,5 +52,17 @@ public class SessionController {
     public String deleteSession(@PathVariable Long id, @PathVariable Long sessionId) {
         sessionService.deleteSessionFromGoal(id, sessionId);
         return "redirect:/home/goals/" + id + "/sessions";
+    }
+
+    private String addSessionModelAttributes(@PathVariable Long id, Model model) {
+        model.addAttribute("sessionRequest", new SessionRequestDto());
+        model.addAttribute("isAdmin", authService.isCurrentUserAdmin());
+        model.addAttribute("goalId", id);
+        model.addAttribute("sessionRequest", new SessionRequestDto());
+        model.addAttribute("goalDeadline", goalService.getGoalDeadline(id));
+        model.addAttribute("goalTarget", goalService.getGoalTargetAmount(id));
+        model.addAttribute("today", LocalDate.now());
+
+        return "sessions/add_session_page";
     }
 }
