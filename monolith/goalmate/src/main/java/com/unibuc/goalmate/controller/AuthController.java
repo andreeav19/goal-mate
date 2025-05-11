@@ -42,6 +42,6 @@ public class AuthController {
 
     @GetMapping("/access-denied")
     public String getAccessDeniedPage() {
-        return "auth/access_denied";
+        return "error/access_denied";
     }
 }
