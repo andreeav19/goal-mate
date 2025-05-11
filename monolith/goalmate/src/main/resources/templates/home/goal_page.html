@@ -9,7 +9,7 @@
 
         <div class="flex-grow-1 px-3 mt-5">
 
-            <th:block th:insert="~{fragments/section_header :: script_end('Goal List', 'Add Goal', '/home/goals/add')}"></th:block>
+            <th:block th:insert="~{fragments/section_header :: section_header('Goal List', 'Add Goal', '/home/goals/add')}"></th:block>
 
             <div class="row row-cols-1 row-cols-md-4 g-4">
                 <div th:each="goal : ${goals}"  class="col">
@@ -33,7 +33,7 @@
                                 No target deadline.
                             </p>
 
-                            <a href="#" class="card-link">View sessions</a>
+                            <a th:href="@{/home/goals/{id}/sessions(id=${goal.goalId})}" class="card-link">View sessions</a>
                             <a th:href="@{/home/goals/{id}(id=${goal.goalId})}" class="card-link">Edit</a>
                             <form th:action="@{/home/goals/delete/{id}(id=${goal.goalId})}" method="POST" style="display: inline;">
                                 <input type="hidden" name="_method" value="DELETE">

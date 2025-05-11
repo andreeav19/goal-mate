@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{fragments/head_start :: head_start('Add Session')}"></th:block>
+
+<body>
+<div class="d-flex">
+    <div>
+        <th:block th:insert="~{fragments/home_sidebar :: home_sidebar('home', ${isAdmin})}"></th:block>
+    </div>
+
+    <div class="flex-grow-1 px-3 mt-5">
+        <div class="row justify-content-center w-100">
+            <div class="col-md-4 mt-5">
+                <h2 class="text-center mb-4">Add Session</h2>
+                <hr class="mb-4">
+
+                <form th:action="@{/home/goals/{id}/sessions/add(id=${goalId})}" th:object="${sessionRequest}" method="post">
+                    <div class="mb-3">
+                        <label for="inputAmount" class="form-label">Progress Amount</label>
+                        <input type="number" th:field="*{progressAmount}" step="0.01" min="0.1" th:max="${goalTarget}"
+                               class="form-control" id="inputAmount">
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputDate" class="form-label">Completed Date</label>
+                        <input type="date" th:field="*{date}" id="inputDate" name="inputDate" class="form-control"
+                               th:min="${today}" th:max="${goalDeadline}"/>
+                    </div>
+
+                    <br>
+
+                    <div class="text-center">
+                        <a th:href="@{/home/goals/{id}/sessions(id=${goalId})}"
+                           class="btn btn-primary w-25">
+                            <span>Cancel</span>
+                        </a>
+                        <button type="submit" class="btn btn-primary w-25">Add</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:insert="~{fragments/script_end :: script_end}"></th:block>
+</body>
+</html>

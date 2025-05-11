@@ -35,11 +35,16 @@
                     </div>
                     <div class="mb-3">
                         <label for="inputTargetAmount" class="form-label">Target Amount</label>
-                        <input type="number" th:field="*{targetAmount}" step="0.01" min="0.0" class="form-control" id="inputTargetAmount">
+                        <input type="number" th:field="*{targetAmount}" step="0.01" min="1.0" class="form-control" id="inputTargetAmount">
                     </div>
                     <div class="mb-3">
                         <label for="inputDeadline" class="form-label">Target Date</label>
-                        <input type="date" th:field="*{deadline}" id="inputDeadline" name="targetDate" class="form-control" />
+                        <input type="date"
+                               name="deadline"
+                               id="inputDeadline"
+                               class="form-control"
+                               th:value="${goalRequest.deadline != null ? #temporals.format(goalRequest.deadline, 'yyyy-MM-dd') : ''}"
+                               th:min="${today}"/>
                     </div>
 
                     <br>

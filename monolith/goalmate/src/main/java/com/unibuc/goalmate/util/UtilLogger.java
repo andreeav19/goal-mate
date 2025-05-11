@@ -19,4 +19,12 @@ public class UtilLogger {
     public static void logInfoMessage(String customMessage) {
         logger.info(customMessage);
     }
+
+    public static void logWarningMessage(String customMessage) {
+        logger.warn(customMessage);
+    }
+
+    public static void logErrorMessage(String customMessage) {
+        logger.error(customMessage);
+    }
 }
