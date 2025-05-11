@@ -11,6 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @Controller
 @RequestMapping("/home/goals/{id}/sessions")
 @RequiredArgsConstructor
@@ -32,6 +34,9 @@ public class SessionController {
         model.addAttribute("isAdmin", authService.isCurrentUserAdmin());
         model.addAttribute("goalId", id);
         model.addAttribute("sessionRequest", new SessionRequestDto());
+        model.addAttribute("goalDeadline", goalService.getGoalDeadline(id));
+        model.addAttribute("goalTarget", goalService.getGoalTargetAmount(id));
+        model.addAttribute("today", LocalDate.now());
         return "sessions/add_session_page";
     }
 

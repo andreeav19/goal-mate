@@ -15,6 +15,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -143,5 +144,21 @@ public class GoalService {
                         )
                 ).toList()
         );
+    }
+
+    public LocalDate getGoalDeadline(Long goalId) {
+        Goal goal = goalRepository.findById(goalId).orElseThrow(
+                () -> new EntityNotFoundException("Goal not found.")
+        );
+
+        return goal.getDeadline();
+    }
+
+    public Float getGoalTargetAmount(Long goalId) {
+        Goal goal = goalRepository.findById(goalId).orElseThrow(
+                () -> new EntityNotFoundException("Goal not found.")
+        );
+
+        return goal.getTargetAmount();
     }
 }

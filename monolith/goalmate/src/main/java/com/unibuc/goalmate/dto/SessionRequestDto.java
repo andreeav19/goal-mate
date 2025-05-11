@@ -1,5 +1,7 @@
 package com.unibuc.goalmate.dto;
 
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,5 +19,6 @@ public class SessionRequestDto {
     private LocalDate date;
 
     @NotNull(message = "Session progress must be specified.")
+    @DecimalMin(value = "0.1", message = "Progress amount must be at least 0.1.")
     private Float progressAmount;
 }

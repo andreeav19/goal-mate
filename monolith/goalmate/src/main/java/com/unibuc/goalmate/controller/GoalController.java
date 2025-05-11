@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.LocalDate;
 
 @Controller
 @RequestMapping("/home/goals")
@@ -36,6 +37,8 @@ public class GoalController {
         model.addAttribute("isAdmin", authService.isCurrentUserAdmin());
         model.addAttribute("hobbies", hobbyService.getHobbyOptions());
         model.addAttribute("goalRequest", new GoalRequestDto());
+        model.addAttribute("today", LocalDate.now());
+
         return "home/add_goal_page";
     }
 
@@ -56,6 +59,7 @@ public class GoalController {
         model.addAttribute("isAdmin", authService.isCurrentUserAdmin());
         model.addAttribute("goalRequest", goalService.getGoalById(id));
         model.addAttribute("hobbies", hobbyService.getHobbyOptions());
+        model.addAttribute("today", LocalDate.now());
 
         return "home/edit_goal_page";
     }

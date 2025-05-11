@@ -23,7 +23,7 @@ public class SessionService {
                 () -> new EntityNotFoundException("Goal not found."));
 
         if (goal.getCurrentAmount() >= goal.getTargetAmount()) {
-            UtilLogger.logInfoMessage("Session not added. Target amount is already reached.");
+            UtilLogger.logWarningMessage("Session not added. Target amount is already reached.");
             return;
         }
 
@@ -52,7 +52,15 @@ public class SessionService {
                 () -> new EntityNotFoundException("Session not found."));
 
         if (!session.getGoal().getGoalId().equals(goalId)) {
-            throw new IllegalArgumentException("Session does not belong to specified goal.");
+            String message = "Session does not belong to specified goal.";
+            UtilLogger.logErrorMessage(message);
+            throw new IllegalArgumentException(message);
+        }
+
+        if (session.getDate().isAfter(goal.getDeadline())) {
+            String message = "Session date cannot be later than goal deadline.";
+            UtilLogger.logErrorMessage(message);
+            throw new RuntimeException(message);
         }
 
         goal.setCurrentAmount(
