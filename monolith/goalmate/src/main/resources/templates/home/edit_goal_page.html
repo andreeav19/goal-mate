@@ -39,8 +39,12 @@
                     </div>
                     <div class="mb-3">
                         <label for="inputDeadline" class="form-label">Target Date</label>
-                        <input type="date" th:field="*{deadline}" id="inputDeadline" name="targetDate" class="form-control"
-                            th:min="${today}"/>
+                        <input type="date"
+                               name="deadline"
+                               id="inputDeadline"
+                               class="form-control"
+                               th:value="${goalRequest.deadline != null ? #temporals.format(goalRequest.deadline, 'yyyy-MM-dd') : ''}"
+                               th:min="${today}"/>
                     </div>
 
                     <br>
