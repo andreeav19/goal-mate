@@ -48,6 +48,10 @@ public class GoalController {
         if (bindingResult.hasErrors()) {
             UtilLogger.logBindingResultErrors(bindingResult, "Error while adding goal to logged user.");
             model.addAttribute("errors", bindingResult.getAllErrors());
+            model.addAttribute("isAdmin", authService.isCurrentUserAdmin());
+            model.addAttribute("hobbies", hobbyService.getHobbyOptions());
+            model.addAttribute("goalRequest", new GoalRequestDto());
+            model.addAttribute("today", LocalDate.now());
 
             return "home/add_goal_page";
         }
@@ -73,6 +77,10 @@ public class GoalController {
         if (bindingResult.hasErrors()) {
             UtilLogger.logBindingResultErrors(bindingResult, "Error while editing goal with id " + id);
             model.addAttribute("errors", bindingResult.getAllErrors());
+            model.addAttribute("isAdmin", authService.isCurrentUserAdmin());
+            model.addAttribute("goalRequest", goalService.getGoalById(id));
+            model.addAttribute("hobbies", hobbyService.getHobbyOptions());
+            model.addAttribute("today", LocalDate.now());
 
             return "home/edit_goal_page";
         }
