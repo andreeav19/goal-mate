@@ -1,5 +1,6 @@
 package com.unibuc.goalmate.dto;
 
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,5 +16,6 @@ public class UserRoleRequestDto {
     private Long userId;
 
     @NotNull(message = "Role name must not be null.")
+    @NotEmpty(message = "Role name must be completed.")
     private String roleName;
 }
