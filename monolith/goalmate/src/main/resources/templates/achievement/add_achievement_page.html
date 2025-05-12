@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{fragments/head_start :: head_start('Add Achievement')}"></th:block>
+
+<body>
+<div class="d-flex">
+    <div>
+        <th:block th:insert="~{fragments/home_sidebar :: home_sidebar('home', ${isAdmin})}"></th:block>
+    </div>
+
+    <div class="flex-grow-1 px-3 mt-5">
+        <div class="row justify-content-center w-100">
+            <div class="col-md-4 mt-5">
+                <h2 class="text-center mb-4">Add Achievement</h2>
+                <hr class="mb-4">
+                <th:block th:insert="~{fragments/section_error :: section_error(${errors})}"></th:block>
+
+                <form th:action="@{/home/goals/{id}/achievements/add(id=${goalId})}" th:object="${achievementRequest}" method="post">
+                    <div class="mb-3">
+                        <label for="inputTitle" class="form-label">Title</label>
+                        <input type="text" th:field="*{title}" class="form-control" id="inputTitle" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputAmount" class="form-label">Amount To Reach</label>
+                        <input type="number" th:field="*{amountToReach}" step="0.01" min="0.1" class="form-control" id="inputAmount" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputDate" class="form-label">Date Awarded</label>
+                        <input type="date" th:field="*{dateAwarded}" class="form-control" id="inputDate" required/>
+                    </div>
+
+                    <div class="text-center">
+                        <a th:href="@{/home/goals/{id}/achievements(id=${goalId})}" class="btn btn-primary w-25">
+                            <span>Cancel</span>
+                        </a>
+                        <button type="submit" class="btn btn-primary w-25">Add</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:insert="~{fragments/script_end :: script_end}"></th:block>
+</body>
+</html>
