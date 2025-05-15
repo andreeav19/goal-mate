@@ -41,6 +41,10 @@ public class HobbyController {
 
         if (bindingResult.hasErrors()) {
             UtilLogger.logBindingResultErrors(bindingResult, "Could not add hobby.");
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            model.addAttribute("isAdmin", authService.isCurrentUserAdmin());
+            model.addAttribute("hobbyRequest", new HobbyRequestDto());
+
             return "hobby/add_hobby_page";
         }
 
