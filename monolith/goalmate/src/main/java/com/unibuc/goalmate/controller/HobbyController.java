@@ -19,7 +19,7 @@ public class HobbyController {
     private final HobbyService hobbyService;
 
     @GetMapping()
-    public String getAllUsers(Model model) {
+    public String getAllHobbies(Model model) {
         model.addAttribute("isAdmin", authService.isCurrentUserAdmin());
         model.addAttribute("hobbies", hobbyService.getAllHobbies());
         model.addAttribute("hobbyRequest", new HobbyRequestDto());
@@ -57,8 +57,6 @@ public class HobbyController {
 
         return "redirect:/hobbies";
     }
-
-
 
     @PostMapping("/delete-hobby")
     public String deleteHobby(@RequestParam String hobbyName) {

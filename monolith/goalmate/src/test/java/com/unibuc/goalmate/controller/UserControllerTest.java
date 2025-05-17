@@ -73,7 +73,7 @@ class UserControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin"));
 
-        verify(userService, times(1)).addUserRole(any(UserRoleRequestDto.class));
+        verify(userService, times(1)).addUserRole(dto);
     }
 
     @Test
@@ -101,7 +101,7 @@ class UserControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin"));
 
-        verify(userService, times(1)).deleteUserRole(any(UserRoleRequestDto.class));
+        verify(userService, times(1)).deleteUserRole(dto);
     }
 
     @Test
