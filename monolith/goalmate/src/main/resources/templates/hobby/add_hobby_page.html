@@ -13,6 +13,7 @@
       <div class="col-md-4 mt-5">
         <h2 class="text-center mb-4">Add Hobby</h2>
         <hr class="mb-4">
+        <th:block th:insert="~{fragments/section_error :: section_error(${errors})}"></th:block>
 
         <div th:if="${errorMessage}" class="alert alert-danger text-center" role="alert">
           <p th:text="${errorMessage}"></p>

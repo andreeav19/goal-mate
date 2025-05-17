@@ -25,11 +25,11 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable) // temporary for testing
                 .authorizeHttpRequests(configurer ->
                         configurer
-                                .requestMatchers("/auth/register").permitAll()
-                                .requestMatchers("/auth/login").permitAll()
-                                .requestMatchers("/admin").hasRole("ADMIN")
-                                .requestMatchers("/hobbies").hasRole("ADMIN")
-                                .anyRequest().authenticated()
+                                .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/hobbies/**").hasRole("ADMIN")
+                                .requestMatchers("/logout").authenticated()
+                                .anyRequest().hasAnyRole("USER", "ADMIN")
                 )
                 .formLogin(form -> form
                         .loginPage("/auth/login")
