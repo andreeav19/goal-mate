@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.instanceOf;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -60,7 +61,25 @@ class HobbyControllerTest {
 
     @Test
     @WithMockUser(username = "admin@example.com", roles = {"ADMIN", "USER"})
-    void addHobby_ValidInput_ShouldCallServiceAndRedirect() throws Exception {
+    void getAddHobbyPage_AsAdmin_ShouldReturnAddHobbyPage() throws Exception {
+        when(authService.isCurrentUserAdmin()).thenReturn(true);
+
+        mockMvc.perform(get("/hobbies/add-hobby"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("hobby/add_hobby_page"))
+                .andExpect(model().attribute("isAdmin", true))
+                .andExpect(model().attribute("hobbyRequest", instanceOf(HobbyRequestDto.class)));
+    }
+
+    @Test
+    void getAddHobbyPage_NotAuthenticated_ShouldNotReturnAddHobbyPage() throws Exception {
+        mockMvc.perform(get("/hobbies/add-hobby"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(username = "admin@example.com", roles = {"ADMIN", "USER"})
+    void postAddHobby_ValidInput_ShouldCallServiceAndRedirect() throws Exception {
         HobbyRequestDto dto = new HobbyRequestDto("Drawing", "");
 
         mockMvc.perform(post("/hobbies/add-hobby")
@@ -74,8 +93,8 @@ class HobbyControllerTest {
 
     @Test
     @WithMockUser(username = "admin@example.com", roles = {"ADMIN", "USER"})
-    void addHobby_InvalidInput_ShouldReturnToFormWithErrors() throws Exception {
-        HobbyRequestDto invalidDto = new HobbyRequestDto("", ""); // Assuming name is required
+    void postAddHobby_InvalidInput_ShouldReturnToFormWithErrors() throws Exception {
+        HobbyRequestDto invalidDto = new HobbyRequestDto("", "");
 
         mockMvc.perform(post("/hobbies/add-hobby")
                         .flashAttr("hobbyRequest", invalidDto)
@@ -91,7 +110,7 @@ class HobbyControllerTest {
 
     @Test
     @WithMockUser(username = "admin@example.com", roles = {"ADMIN", "USER"})
-    void deleteHobby_ValidInput_ShouldCallServiceAndRedirect() throws Exception {
+    void postDeleteHobby_ValidInput_ShouldCallServiceAndRedirect() throws Exception {
         String hobbyName = "Drawing";
 
         mockMvc.perform(post("/hobbies/delete-hobby")
