@@ -1,12 +1,16 @@
 package com.unibuc.goalmate.controller;
 
+import com.unibuc.goalmate.advice.ErrorControllerAdvice;
 import com.unibuc.goalmate.dto.UserResponseDto;
 import com.unibuc.goalmate.dto.UserRoleRequestDto;
+import com.unibuc.goalmate.security.SecurityConfig;
+import com.unibuc.goalmate.security.UserDetailsServiceImpl;
 import com.unibuc.goalmate.service.AuthService;
 import com.unibuc.goalmate.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -19,11 +23,14 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Import(SecurityConfig.class)
 @WebMvcTest(UserController.class)
 class UserControllerTest {
-
     @Autowired
     private MockMvc mockMvc;
+
+    @MockitoBean
+    private UserDetailsServiceImpl userDetailsService;
 
     @MockitoBean
     private AuthService authService;
@@ -55,9 +62,18 @@ class UserControllerTest {
     }
 
     @Test
-    void getAllUsers_NotAuthenticated_ShouldNotReturnUsersPage() throws Exception {
+    @WithMockUser(username = "user@example.com", roles = {"USER"})
+    void getAllUsers_AsUser_ShouldRedirectAccessDeniedPage() throws Exception {
         mockMvc.perform(get("/admin"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isForbidden())
+                .andExpect(forwardedUrl("/auth/access-denied"));
+    }
+
+    @Test
+    void getAllUsers_NotAuthenticated_ShouldRedirectLoginPage() throws Exception {
+        mockMvc.perform(get("/admin"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/auth/login"));
     }
 
     @Test
@@ -115,5 +131,4 @@ class UserControllerTest {
 
         verify(userService, never()).deleteUserRole(any());
     }
-
 }

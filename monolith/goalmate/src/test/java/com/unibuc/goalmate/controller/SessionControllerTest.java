@@ -1,14 +1,18 @@
 package com.unibuc.goalmate.controller;
 
+import com.unibuc.goalmate.advice.ErrorControllerAdvice;
 import com.unibuc.goalmate.dto.GoalSessionsResponseDto;
 import com.unibuc.goalmate.dto.SessionRequestDto;
 import com.unibuc.goalmate.dto.SessionResponseDto;
+import com.unibuc.goalmate.security.SecurityConfig;
+import com.unibuc.goalmate.security.UserDetailsServiceImpl;
 import com.unibuc.goalmate.service.AuthService;
 import com.unibuc.goalmate.service.GoalService;
 import com.unibuc.goalmate.service.SessionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,11 +28,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
+@Import({SecurityConfig.class, ErrorControllerAdvice.class})
 @WebMvcTest(SessionController.class)
 class SessionControllerTest {
-
     @Autowired
     private MockMvc mockMvc;
+
+    @MockitoBean
+    private UserDetailsServiceImpl userDetailsService;
 
     @MockitoBean
     private AuthService authService;
@@ -40,7 +47,7 @@ class SessionControllerTest {
     private GoalService goalService;
 
     @Test
-    @WithMockUser(username = "admin@example.com", roles = {"ADMIN", "USER"})
+    @WithMockUser
     void getGoalSessions_ValidId_ShouldReturnSessionsPage() throws Exception {
         Long goalId = 1L;
         GoalSessionsResponseDto response = new GoalSessionsResponseDto(
@@ -63,7 +70,7 @@ class SessionControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin@example.com", roles = {"ADMIN", "USER"})
+    @WithMockUser
     void getAddSessions_ValidId_ShouldReturnAddSessionPage() throws Exception {
         Long goalId = 1L;
         LocalDate goalDeadline = LocalDate.now().plusMonths(1);
@@ -84,7 +91,7 @@ class SessionControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin@example.com", roles = {"ADMIN", "USER"})
+    @WithMockUser
     void postAddSession_ValidInput_ShouldRedirectSessionsPage() throws Exception {
         SessionRequestDto dto = new SessionRequestDto(LocalDate.now(), 1f);
 
@@ -98,7 +105,7 @@ class SessionControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin@example.com", roles = {"ADMIN", "USER"})
+    @WithMockUser
     void postAddSession_InvalidInput_ShouldRedirectToAddSessionPage() throws Exception {
         SessionRequestDto dto = new SessionRequestDto(null, null);
 
@@ -113,12 +120,27 @@ class SessionControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin@example.com", roles = {"ADMIN", "USER"})
+    @WithMockUser
     void postDeleteSession_ValidInput_ShouldRedirectSessionsPage() throws Exception {
         mockMvc.perform(post("/home/goals/1/sessions/delete/1")
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/home/goals/1/sessions"));
+
+        verify(sessionService, times(1)).deleteSessionFromGoal(1L, 1L);
+    }
+
+    @Test
+    @WithMockUser
+    void postDeleteSession_InvalidInput_ShouldRedirectErrorPage() throws Exception {
+        doThrow(new RuntimeException("Something went wrong."))
+                .when(sessionService)
+                .deleteSessionFromGoal(1L, 1L);
+
+        mockMvc.perform(post("/home/goals/1/sessions/delete/1")
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("error/error_page"));
 
         verify(sessionService, times(1)).deleteSessionFromGoal(1L, 1L);
     }

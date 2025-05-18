@@ -1,13 +1,18 @@
 package com.unibuc.goalmate.controller;
 
+import com.unibuc.goalmate.advice.ErrorControllerAdvice;
 import com.unibuc.goalmate.dto.*;
+import com.unibuc.goalmate.security.SecurityConfig;
+import com.unibuc.goalmate.security.UserDetailsServiceImpl;
 import com.unibuc.goalmate.service.AuthService;
 import com.unibuc.goalmate.service.GoalService;
 import com.unibuc.goalmate.service.HobbyService;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -23,10 +28,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
+@Import({SecurityConfig.class, ErrorControllerAdvice.class})
 @WebMvcTest(GoalController.class)
 class GoalControllerTest {
     @Autowired
     private MockMvc mockMvc;
+
+    @MockitoBean
+    private UserDetailsServiceImpl userDetailsService;
 
     @MockitoBean
     private AuthService authService;
@@ -38,7 +47,7 @@ class GoalControllerTest {
     private HobbyService hobbyService;
 
     @Test
-    @WithMockUser(username = "admin@example.com", roles = {"ADMIN", "USER"})
+    @WithMockUser(username = "user@example.com", roles = {"USER"})
     void getGoalSessions_Authenticated_ShouldReturnHomePage() throws Exception {
         List<GoalResponseDto> goals = List.of(new GoalResponseDto(
                 1L,
@@ -51,7 +60,7 @@ class GoalControllerTest {
                 LocalDate.now().plusMonths(3)
         ));
 
-        String email = "admin@example.com";
+        String email = "user@example.com";
         when(goalService.getGoalsByLoggedUser(email)).thenReturn(goals);
         when(authService.isCurrentUserAdmin()).thenReturn(true);
 
@@ -63,13 +72,14 @@ class GoalControllerTest {
     }
 
     @Test
-    void getGoalSessions_NotAuthenticated_ShouldNotReturnHomePage() throws Exception {
+    void getGoalSessions_NotAuthenticated_ShouldRedirectLoginPage() throws Exception {
         mockMvc.perform(get("/home/goals"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/auth/login"));
     }
 
     @Test
-    @WithMockUser(username = "admin@example.com", roles = {"ADMIN", "USER"})
+    @WithMockUser
     void getAddGoalPage_Authenticated_ShouldReturnAddGoalPage() throws Exception {
         List<HobbyOptionResponseDto> hobbies = List.of(new HobbyOptionResponseDto(1L, "Drawing"));
 
@@ -86,15 +96,16 @@ class GoalControllerTest {
     }
 
     @Test
-    void getAddGoalPage_NotAuthenticated_ShouldNotReturnAddGoalPage() throws Exception {
+    void getAddGoalPage_NotAuthenticated_ShouldRedirectLoginPage() throws Exception {
         mockMvc.perform(get("/home/goals/add"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/auth/login"));
     }
 
     @Test
-    @WithMockUser(username = "admin@example.com", roles = {"ADMIN", "USER"})
+    @WithMockUser(username = "user@example.com", roles = {"USER"})
     void postAddGoal_ValidInput_ShouldRedirectGoalsPage() throws Exception {
-        String email = "admin@example.com";
+        String email = "user@example.com";
         GoalRequestDto dto = new GoalRequestDto(
                 1L, null, 10f, "km", LocalDate.now());
 
@@ -108,7 +119,7 @@ class GoalControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin@example.com", roles = {"ADMIN", "USER"})
+    @WithMockUser
     void postAddGoal_InvalidInput_ShouldNotRedirectGoalsPage() throws Exception {
         String email = "admin@example.com";
         GoalRequestDto dto = new GoalRequestDto();
@@ -124,7 +135,7 @@ class GoalControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin@example.com", roles = {"ADMIN", "USER"})
+    @WithMockUser
     void getEditGoalPage_Authenticated_ShouldReturnAddGoalPage() throws Exception {
         List<HobbyOptionResponseDto> hobbies = List.of(new HobbyOptionResponseDto(1L, "Drawing"));
         GoalResponseDto goal = new GoalResponseDto(
@@ -152,13 +163,14 @@ class GoalControllerTest {
     }
 
     @Test
-    void getEditGoalPage_NotAuthenticated_ShouldNotReturnEditGoalPage() throws Exception {
+    void getEditGoalPage_NotAuthenticated_ShouldRedirectLogin() throws Exception {
         mockMvc.perform(get("/home/goals/1"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/auth/login"));
     }
 
     @Test
-    @WithMockUser(username = "admin@example.com", roles = {"ADMIN", "USER"})
+    @WithMockUser
     void postEditGoal_ValidInput_ShouldRedirectGoalsPage() throws Exception {
         String email = "admin@example.com";
         GoalRequestDto dto = new GoalRequestDto(
@@ -174,7 +186,7 @@ class GoalControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin@example.com", roles = {"ADMIN", "USER"})
+    @WithMockUser
     void postEditGoal_InvalidInput_ShouldNotRedirectGoalsPage() throws Exception {
         GoalRequestDto dto = new GoalRequestDto();
         when(goalService.getGoalById(1L)).thenReturn(Mockito.mock(GoalResponseDto.class));
@@ -190,7 +202,7 @@ class GoalControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin@example.com", roles = {"ADMIN", "USER"})
+    @WithMockUser
     void postDeleteGoal_ValidInput_ShouldRedirectGoalsPage() throws Exception {
         mockMvc.perform(post("/home/goals/delete/1")
                         .with(csrf()))
@@ -200,4 +212,18 @@ class GoalControllerTest {
         verify(goalService, times(1)).deleteGoal(1L);
     }
 
+    @Test
+    @WithMockUser
+    void postDeleteGoal_InvalidInput_ShouldRedirectErrorPage() throws Exception {
+        doThrow(new EntityNotFoundException("Goal not found."))
+                .when(goalService)
+                .deleteGoal(1L);
+
+        mockMvc.perform(post("/home/goals/delete/1")
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("error/error_page"));
+
+        verify(goalService, times(1)).deleteGoal(1L);
+    }
 }
