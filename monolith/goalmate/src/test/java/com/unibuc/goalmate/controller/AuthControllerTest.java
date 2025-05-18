@@ -1,6 +1,5 @@
 package com.unibuc.goalmate.controller;
 
-import com.unibuc.goalmate.dto.HobbyRequestDto;
 import com.unibuc.goalmate.dto.RegisterRequestDto;
 import com.unibuc.goalmate.security.SecurityConfig;
 import com.unibuc.goalmate.security.UserDetailsServiceImpl;

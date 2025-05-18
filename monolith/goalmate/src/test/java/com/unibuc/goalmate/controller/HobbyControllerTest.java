@@ -1,6 +1,5 @@
 package com.unibuc.goalmate.controller;
 
-import com.unibuc.goalmate.advice.ErrorControllerAdvice;
 import com.unibuc.goalmate.dto.HobbyRequestDto;
 import com.unibuc.goalmate.dto.HobbyResponseDto;
 import com.unibuc.goalmate.service.AuthService;
@@ -8,7 +7,6 @@ import com.unibuc.goalmate.service.HobbyService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,7 +22,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @WebMvcTest(HobbyController.class)
-@Import(ErrorControllerAdvice.class)
 class HobbyControllerTest {
     @Autowired
     private MockMvc mockMvc;
