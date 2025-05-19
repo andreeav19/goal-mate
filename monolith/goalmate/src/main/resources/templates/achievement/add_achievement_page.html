@@ -22,11 +22,8 @@
                     </div>
                     <div class="mb-3">
                         <label for="inputAmount" class="form-label">Amount To Reach</label>
-                        <input type="number" th:field="*{amountToReach}" step="0.01" min="0.1" class="form-control" id="inputAmount" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="inputDate" class="form-label">Date Awarded</label>
-                        <input type="date" th:field="*{dateAwarded}" class="form-control" id="inputDate" required/>
+                        <input type="number" th:field="*{amountToReach}" step="0.01" th:min="${goalCurrentAmount + 0.01}" th:max="${goalTarget}"
+                               class="form-control" id="inputAmount" required>
                     </div>
 
                     <div class="text-center">

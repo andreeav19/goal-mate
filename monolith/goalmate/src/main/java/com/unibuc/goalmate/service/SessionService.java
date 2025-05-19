@@ -17,6 +17,7 @@ import java.util.ArrayList;
 public class SessionService {
     private final SessionRepository sessionRepository;
     private final GoalRepository goalRepository;
+    private final AchievementService achievementService;
 
     public void addSessionToGoal(Long goalId, SessionRequestDto requestDto) {
         Goal goal = goalRepository.findById(goalId).orElseThrow(
@@ -42,6 +43,8 @@ public class SessionService {
 
         sessionRepository.save(session);
         goalRepository.save(goal);
+
+        achievementService.checkAchievements(goalId, requestDto);
     }
 
     public void deleteSessionFromGoal(Long goalId, Long sessionId) {

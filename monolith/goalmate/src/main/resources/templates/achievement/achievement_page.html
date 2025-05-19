@@ -9,9 +9,9 @@
 
     <div class="flex-grow-1 px-3 mt-5">
         <th:block th:insert="~{fragments/section_header :: section_header(
-        ${#strings.capitalize(goalName)} + ' Achievement List',
+        ${#strings.capitalize(goalAchievements.goalName)} + ' Achievements',
         'Add Achievement',
-        '/home/goals/' + ${goalId} + '/achievements/add'
+        '/home/goals/' + ${goalAchievements.goalId} + '/achievements/add'
         )}"></th:block>
 
         <div class="w-75 ms-5">
@@ -25,13 +25,13 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="achievement : ${achievements}">
+                <tr th:each="achievement : ${goalAchievements.achievements}">
                     <th scope="row" th:text="${achievement.title}">Achievement Title</th>
                     <td th:text="${achievement.amountToReach}">Amount</td>
                     <td th:text="${achievement.dateAwarded}">Date Awarded</td>
                     <td>
                         <form th:action="@{/home/goals/{goalId}/achievements/delete/{achievementId}
-                                (goalId=${goalId}, achievementId=${achievement.achievementId})}" method="post">
+                                (goalId=${goalAchievements.goalId}, achievementId=${achievement.achievementId})}" method="post">
                             <button type="submit" class="btn btn-sm btn-danger">&minus;</button>
                         </form>
                     </td>

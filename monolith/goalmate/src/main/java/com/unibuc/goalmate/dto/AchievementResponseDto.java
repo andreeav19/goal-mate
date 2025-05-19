@@ -1,6 +1,5 @@
-package com.unibuc.goalmate.model;
+package com.unibuc.goalmate.dto;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,21 +11,9 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-public class Achievement {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class AchievementResponseDto {
     private Long achievementId;
-
-    @Column(nullable = false)
     private String title;
-
-    @Column(nullable = false)
     private Float amountToReach;
-
     private LocalDate dateAwarded;
-
-    @ManyToOne
-    @JoinColumn(name = "goal_id", nullable = false)
-    private Goal goal;
 }

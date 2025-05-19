@@ -1,7 +1,6 @@
 package com.unibuc.goalmate.controller;
 
 import com.unibuc.goalmate.dto.AchievementRequestDto;
-import com.unibuc.goalmate.model.Achievement;
 import com.unibuc.goalmate.service.AchievementService;
 import com.unibuc.goalmate.service.AuthService;
 import com.unibuc.goalmate.service.GoalService;
@@ -11,8 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/home/goals/{id}/achievements")
@@ -24,8 +21,7 @@ public class AchievementController {
 
     @GetMapping()
     public String getGoalAchievements(@PathVariable Long id, Model model) {
-        List<Achievement> achievements = goalService.getGoalAchievements(id);
-        model.addAttribute("achievements", achievements);
+        model.addAttribute("goalAchievements", goalService.getGoalAchievements(id));
         model.addAttribute("isAdmin", authService.isCurrentUserAdmin());
         return "achievement/achievement_page";
     }
@@ -60,9 +56,8 @@ public class AchievementController {
         model.addAttribute("achievementRequest", new AchievementRequestDto());
         model.addAttribute("isAdmin", authService.isCurrentUserAdmin());
         model.addAttribute("goalId", id);
-        model.addAttribute("goalDeadline", goalService.getGoalDeadline(id));
         model.addAttribute("goalTarget", goalService.getGoalTargetAmount(id));
-
-        return "achievements/add_achievement_page";
+        model.addAttribute("goalCurrentAmount", goalService.getGoalCurrentAmount(id));
+        return "achievement/add_achievement_page";
     }
 }

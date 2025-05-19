@@ -1,12 +1,11 @@
 package com.unibuc.goalmate.dto;
 
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -17,8 +16,6 @@ public class AchievementRequestDto {
     private String title;
 
     @NotNull(message = "Amount to reach must be specified.")
+    @DecimalMin(value = "0.1", message = "Progress amount must be at least 0.1.")
     private Float amountToReach;
-
-    @NotNull(message = "Date awarded must be specified.")
-    private LocalDate dateAwarded;
 }
