@@ -5,6 +5,7 @@ import com.unibuc.goalmate.service.AuthService;
 import com.unibuc.goalmate.service.GoalService;
 import com.unibuc.goalmate.service.SessionService;
 import com.unibuc.goalmate.util.UtilLogger;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,7 +36,7 @@ public class SessionController {
 
     @PostMapping("/add")
     public String addSession(@PathVariable Long id, Model model,
-                             @ModelAttribute("sessionRequest") SessionRequestDto requestDto,
+                             @Valid @ModelAttribute("sessionRequest") SessionRequestDto requestDto,
                              BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             UtilLogger.logBindingResultErrors(
@@ -58,7 +59,6 @@ public class SessionController {
         model.addAttribute("sessionRequest", new SessionRequestDto());
         model.addAttribute("isAdmin", authService.isCurrentUserAdmin());
         model.addAttribute("goalId", id);
-        model.addAttribute("sessionRequest", new SessionRequestDto());
         model.addAttribute("goalDeadline", goalService.getGoalDeadline(id));
         model.addAttribute("goalTarget", goalService.getGoalTargetAmount(id));
         model.addAttribute("today", LocalDate.now());
