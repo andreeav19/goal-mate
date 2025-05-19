@@ -9,12 +9,12 @@ import com.unibuc.goalmate.repository.GoalRepository;
 import com.unibuc.goalmate.repository.HobbyRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,8 +23,8 @@ public class GoalService {
     private final GoalMateUserRepository userRepository;
     private final HobbyRepository hobbyRepository;
 
-    public List<GoalResponseDto> getGoalsByLoggedUser(String userEmail) {
-        return goalRepository.findByUser_Email(userEmail).stream()
+    public Page<GoalResponseDto> getGoalsByLoggedUser(String userEmail, Pageable pageable) {
+        return goalRepository.findByUser_Email(userEmail, pageable)
                 .map(goal -> new GoalResponseDto(
                         goal.getGoalId(),
                         goal.getHobby().getHobbyId(),
@@ -34,9 +34,10 @@ public class GoalService {
                         goal.getCurrentAmount(),
                         goal.getTargetUnit(),
                         goal.getDeadline()
-                ))
-                .collect(Collectors.toList());
+                ));
     }
+
+
 
     public void addGoalToLoggedUser(GoalRequestDto goalRequestDto, String userEmail) {
         GoalMateUser user = userRepository.findByEmail(userEmail).orElseThrow(

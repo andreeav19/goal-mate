@@ -1,12 +1,17 @@
 package com.unibuc.goalmate.controller;
 
 import com.unibuc.goalmate.dto.GoalRequestDto;
+import com.unibuc.goalmate.dto.GoalResponseDto;
 import com.unibuc.goalmate.service.AuthService;
 import com.unibuc.goalmate.service.GoalService;
 import com.unibuc.goalmate.service.HobbyService;
 import com.unibuc.goalmate.util.UtilLogger;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,13 +29,47 @@ public class GoalController {
     private final HobbyService hobbyService;
 
     @GetMapping()
-    public String getGoals(Model model, Principal principal) {
+    public String getGoals(Model model,
+                           Principal principal,
+                           @RequestParam(defaultValue = "0") int page,
+                           @RequestParam(defaultValue = "8") int size,
+                           @RequestParam(defaultValue = "deadline") String sortBy,
+                           @RequestParam(defaultValue = "asc") String sortDir) {
+
+        // Permitem sortarea doar după deadline și hobbyName
+        if (!sortBy.equals("deadline") && !sortBy.equals("hobbyName")) {
+            sortBy = "deadline"; // fallback la sortare implicită
+        }
+
         String userEmail = principal.getName();
-        model.addAttribute("goals", goalService.getGoalsByLoggedUser(userEmail));
+
+        // Transformă hobbyName în path corect pentru sortare prin join
+        Sort sort;
+        if (sortBy.equals("hobbyName")) {
+            sort = sortDir.equalsIgnoreCase("asc") ?
+                    Sort.by("hobby.name").ascending() :
+                    Sort.by("hobby.name").descending();
+        } else {
+            sort = sortDir.equalsIgnoreCase("asc") ?
+                    Sort.by("deadline").ascending() :
+                    Sort.by("deadline").descending();
+        }
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<GoalResponseDto> goalPage = goalService.getGoalsByLoggedUser(userEmail, pageable);
+
+        model.addAttribute("goals", goalPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", goalPage.getTotalPages());
+        model.addAttribute("totalItems", goalPage.getTotalElements());
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("sortDir", sortDir);
         model.addAttribute("isAdmin", authService.isCurrentUserAdmin());
 
         return "home/goal_page";
     }
+
 
     @GetMapping("/add")
     public String getAddGoalPage(Model model) {
