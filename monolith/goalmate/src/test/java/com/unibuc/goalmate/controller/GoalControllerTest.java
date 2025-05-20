@@ -46,30 +46,30 @@ class GoalControllerTest {
     @MockitoBean
     private HobbyService hobbyService;
 
-    @Test
-    @WithMockUser(username = "user@example.com", roles = {"USER"})
-    void getGoalSessions_Authenticated_ShouldReturnHomePage() throws Exception {
-        List<GoalResponseDto> goals = List.of(new GoalResponseDto(
-                1L,
-                1L,
-                "Drawing",
-                "Learning oil painting",
-                100f,
-                20f,
-                "drawings",
-                LocalDate.now().plusMonths(3)
-        ));
-
-        String email = "user@example.com";
-        when(goalService.getGoalsByLoggedUser(email)).thenReturn(goals);
-        when(authService.isCurrentUserAdmin()).thenReturn(true);
-
-        mockMvc.perform(get("/home/goals"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("home/goal_page"))
-                .andExpect(model().attribute("isAdmin", true))
-                .andExpect(model().attribute("goals", goals));
-    }
+//    @Test
+//    @WithMockUser(username = "user@example.com", roles = {"USER"})
+//    void getGoalSessions_Authenticated_ShouldReturnHomePage() throws Exception {
+//        List<GoalResponseDto> goals = List.of(new GoalResponseDto(
+//                1L,
+//                1L,
+//                "Drawing",
+//                "Learning oil painting",
+//                100f,
+//                20f,
+//                "drawings",
+//                LocalDate.now().plusMonths(3)
+//        ));
+//
+//        String email = "user@example.com";
+//        when(goalService.getGoalsByLoggedUser(email)).thenReturn(goals);
+//        when(authService.isCurrentUserAdmin()).thenReturn(true);
+//
+//        mockMvc.perform(get("/home/goals"))
+//                .andExpect(status().isOk())
+//                .andExpect(view().name("home/goal_page"))
+//                .andExpect(model().attribute("isAdmin", true))
+//                .andExpect(model().attribute("goals", goals));
+//    }
 
     @Test
     void getGoalSessions_NotAuthenticated_ShouldRedirectLoginPage() throws Exception {

@@ -1,24 +1,20 @@
 package com.unibuc.goalmate.service;
 
-import com.unibuc.goalmate.dto.GoalRequestDto;
-import com.unibuc.goalmate.dto.GoalResponseDto;
-import com.unibuc.goalmate.dto.GoalSessionsResponseDto;
-import com.unibuc.goalmate.dto.SessionResponseDto;
+import com.unibuc.goalmate.dto.*;
 import com.unibuc.goalmate.model.Goal;
 import com.unibuc.goalmate.model.GoalMateUser;
 import com.unibuc.goalmate.model.Hobby;
 import com.unibuc.goalmate.repository.GoalMateUserRepository;
 import com.unibuc.goalmate.repository.GoalRepository;
 import com.unibuc.goalmate.repository.HobbyRepository;
-import com.unibuc.goalmate.util.UtilLogger;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,8 +23,8 @@ public class GoalService {
     private final GoalMateUserRepository userRepository;
     private final HobbyRepository hobbyRepository;
 
-    public List<GoalResponseDto> getGoalsByLoggedUser(String userEmail) {
-        return goalRepository.findByUser_Email(userEmail).stream()
+    public Page<GoalResponseDto> getGoalsByLoggedUser(String userEmail, Pageable pageable) {
+        return goalRepository.findByUser_Email(userEmail, pageable)
                 .map(goal -> new GoalResponseDto(
                         goal.getGoalId(),
                         goal.getHobby().getHobbyId(),
@@ -38,9 +34,10 @@ public class GoalService {
                         goal.getCurrentAmount(),
                         goal.getTargetUnit(),
                         goal.getDeadline()
-                ))
-                .collect(Collectors.toList());
+                ));
     }
+
+
 
     public void addGoalToLoggedUser(GoalRequestDto goalRequestDto, String userEmail) {
         GoalMateUser user = userRepository.findByEmail(userEmail).orElseThrow(
@@ -146,6 +143,28 @@ public class GoalService {
         );
     }
 
+    public GoalAchievementsResponseDto getGoalAchievements(Long goalId) {
+        Goal goal = goalRepository.findById(goalId).orElseThrow(
+                () -> new EntityNotFoundException("Goal not found.")
+        );
+
+        return new GoalAchievementsResponseDto(
+                goalId,
+                goal.getHobby().getName(),
+                goal.getTargetUnit(),
+                goal.getTargetAmount(),
+                goal.getCurrentAmount(),
+                goal.getAchievements().stream().map(
+                        achievement -> new AchievementResponseDto(
+                                achievement.getAchievementId(),
+                                achievement.getTitle(),
+                                achievement.getAmountToReach(),
+                                achievement.getDateAwarded()
+                        )
+                ).toList()
+        );
+    }
+
     public LocalDate getGoalDeadline(Long goalId) {
         Goal goal = goalRepository.findById(goalId).orElseThrow(
                 () -> new EntityNotFoundException("Goal not found.")
@@ -160,5 +179,13 @@ public class GoalService {
         );
 
         return goal.getTargetAmount();
+    }
+
+    public Float getGoalCurrentAmount(Long goalId) {
+        Goal goal = goalRepository.findById(goalId).orElseThrow(
+                () -> new EntityNotFoundException("Goal not found.")
+        );
+
+        return goal.getCurrentAmount();
     }
 }
