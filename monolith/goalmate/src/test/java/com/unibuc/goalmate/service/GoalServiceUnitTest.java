@@ -317,6 +317,7 @@ class GoalServiceUnitTest {
     }
 
     //TODO: Test getGoalSessions()
+    //TODO: Test getGoalAchievements()
 
     @Test
     void getGoalDeadline_ShouldThrowIfGoalNotFound() {
@@ -365,4 +366,28 @@ class GoalServiceUnitTest {
 
         assertEquals(targetAmount, result);
     }
+
+    @Test
+    void getGoalCurrentAmount_ShouldReturnCurrentAmount() {
+        Long goalId = 1L;
+        Goal goal = new Goal();
+        goal.setCurrentAmount(45.5f);
+
+        when(goalRepository.findById(goalId)).thenReturn(Optional.of(goal));
+
+        Float result = goalService.getGoalCurrentAmount(goalId);
+
+        assertEquals(45.5f, result);
+        verify(goalRepository).findById(goalId);
+    }
+
+    @Test
+    void getGoalCurrentAmount_ShouldThrowIfGoalNotFound() {
+        Long goalId = 1L;
+        when(goalRepository.findById(goalId)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> goalService.getGoalCurrentAmount(goalId));
+        verify(goalRepository).findById(goalId);
+    }
+
 }
