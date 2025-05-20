@@ -11,14 +11,14 @@
 
         <div th:if="${goalSessions.currentAmount < goalSessions.targetAmount}">
             <th:block th:insert="~{fragments/section_header :: section_header(
-            ${#strings.capitalize(goalSessions.goalName)} + ' Session List',
+            ${#strings.capitalize(goalSessions.goalName)} + ' Sessions',
             'Add Session',
             '/home/goals/' + ${goalSessions.goalId} + '/sessions/add'
             )}"></th:block>
         </div>
         <div th:if="${goalSessions.currentAmount >= goalSessions.targetAmount}">
             <th:block th:insert="~{fragments/section_header :: section_header(
-            ${#strings.capitalize(goalSessions.goalName)} + ' Session List',
+            ${#strings.capitalize(goalSessions.goalName)} + ' Sessions',
             null,
             null
             )}"></th:block>

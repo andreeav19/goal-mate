@@ -28,16 +28,16 @@
                     <td th:text="${user.username}">Username</td>
                     <td th:text="${user.email}">Email</td>
                     <td>
-                        <div th:if="${user.isModifiable}" class="d-flex flex-wrap gap-2">
-                            <div th:each="role : ${user.roles}" class="position-relative">
+                        <div class="d-flex flex-wrap gap-2">
+                            <div th:each="role : ${user.roleMap}" class="position-relative">
                             <span class="badge rounded-pill pe-4"
-                                  th:classappend="${role == 'ADMIN' ? 'text-bg-info' : 'text-bg-secondary'}"
+                                  th:classappend="${role.key == 'ADMIN' ? 'text-bg-info' : 'text-bg-secondary'}"
                                   style="position: relative; padding-right: 1.5rem;">
-                                <span th:text="${role}"></span>
+                                <span th:text="${role.key}"></span>
 
-                                <form method="post" th:action="@{/admin/delete-role}"
+                                <form th:if="${role.value}" method="post" th:action="@{/admin/delete-role}"
                                       style="position: absolute; top: 0.15rem; right: 0.4rem; margin: 0;">
-                                    <input type="hidden" name="roleName" th:value="${role}"/>
+                                    <input type="hidden" name="roleName" th:value="${role.key}"/>
                                     <input type="hidden" name="userId" th:value="${user.userId}"/>
                                     <button type="submit"
                                             class="btn p-0 m-0 border-0 bg-transparent text-white"
@@ -47,15 +47,7 @@
                             </div>
                         </div>
 
-                        <div th:if="${!user.isModifiable}" class="d-flex flex-wrap gap-2">
-                            <div th:each="role : ${user.roles}" class="position-relative">
-                            <span class="badge rounded-pill pe-4"
-                                  th:classappend="${role == 'ADMIN' ? 'text-bg-info' : 'text-bg-secondary'}"
-                                  style="position: relative; padding-right: 1.5rem;">
-                                <span th:text="${role}"></span>
-                            </span>
-                            </div>
-                        </div>
+
                     </td>
                     <td>
                         <div th:if="${user.isModifiable}">
