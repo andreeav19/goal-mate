@@ -18,7 +18,7 @@
                 <form th:action="@{/home/goals/{id}/sessions/add(id=${goalId})}" th:object="${sessionRequest}" method="post">
                     <div class="mb-3">
                         <label for="inputAmount" class="form-label">Progress Amount</label>
-                        <input type="number" th:field="*{progressAmount}" step="0.01" min="0.1" th:max="${goalTarget}"
+                        <input type="number" th:field="*{progressAmount}" step="0.01" min="0.1"
                                class="form-control" id="inputAmount" required>
                     </div>
                     <div class="mb-3">
