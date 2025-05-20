@@ -3,6 +3,7 @@ package com.unibuc.goalmate.service;
 import com.unibuc.goalmate.dto.SessionRequestDto;
 import com.unibuc.goalmate.model.Goal;
 import com.unibuc.goalmate.model.Session;
+import com.unibuc.goalmate.repository.AchievementRepository;
 import com.unibuc.goalmate.repository.GoalRepository;
 import com.unibuc.goalmate.repository.SessionRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -20,13 +21,15 @@ class SessionServiceUnitTest {
     private SessionService sessionService;
     private SessionRepository sessionRepository;
     private GoalRepository goalRepository;
+    private AchievementService achievementService;
 
     @BeforeEach
     void setUp() {
         goalRepository = mock(GoalRepository.class);
         sessionRepository = mock(SessionRepository.class);
+        achievementService = mock(AchievementService.class);
 
-        sessionService = new SessionService(sessionRepository, goalRepository);
+        sessionService = new SessionService(sessionRepository, goalRepository, achievementService);
     }
 
     @Test
