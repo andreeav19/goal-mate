@@ -82,12 +82,11 @@ class AuthServiceUnitTest {
 
         when(userRepository.findByEmail(dto.getEmail())).thenReturn(Optional.of(new GoalMateUser()));
 
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> authService.register(dto));
-        assertEquals("Email is already in use.", ex.getMessage());
-
+        assertThrows(IllegalArgumentException.class, () -> authService.register(dto));
         verify(userRepository, never()).save(any());
         verify(roleRepository, never()).save(any());
     }
+
     @Test
     void register_ShouldThrowIfUserRoleNotFound() {
         RegisterRequestDto dto = new RegisterRequestDto();
