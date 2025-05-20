@@ -1,7 +1,5 @@
 package com.unibuc.goalmate.controller;
 
-import com.unibuc.goalmate.advice.ErrorControllerAdvice;
-import com.unibuc.goalmate.dto.UserResponseDto;
 import com.unibuc.goalmate.dto.UserRoleRequestDto;
 import com.unibuc.goalmate.security.SecurityConfig;
 import com.unibuc.goalmate.security.UserDetailsServiceImpl;
@@ -17,8 +15,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-
-import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;

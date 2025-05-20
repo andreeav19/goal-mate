@@ -114,7 +114,7 @@ class AchievementControllerTest {
 
     @Test
     @WithMockUser
-    void deleteAchievement_InvalidInput_ShouldRedirectAchievementsPage() throws Exception {
+    void deleteAchievement_InvalidInput_ShouldRedirectErrorPage() throws Exception {
         doThrow(new EntityNotFoundException("Goal not found."))
                 .when(achievementService)
                 .deleteAchievementFromGoal(1L, 1L);
