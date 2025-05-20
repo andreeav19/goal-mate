@@ -5,6 +5,7 @@ import com.unibuc.goalmate.service.AchievementService;
 import com.unibuc.goalmate.service.AuthService;
 import com.unibuc.goalmate.service.GoalService;
 import com.unibuc.goalmate.util.UtilLogger;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,7 +34,7 @@ public class AchievementController {
 
     @PostMapping("/add")
     public String addAchievement(@PathVariable Long id, Model model,
-                                 @ModelAttribute("achievementRequest") AchievementRequestDto requestDto,
+                                 @ModelAttribute("achievementRequest") @Valid AchievementRequestDto requestDto,
                                  BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             UtilLogger.logBindingResultErrors(
