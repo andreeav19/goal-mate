@@ -76,9 +76,7 @@ class GoalServiceUnitTest {
 
         when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
 
-        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () ->
-                goalService.addGoalToLoggedUser(dto, email));
-
+        assertThrows(EntityNotFoundException.class, () -> goalService.addGoalToLoggedUser(dto, email));
         verifyNoInteractions(hobbyRepository, goalRepository);
     }
 
@@ -92,9 +90,7 @@ class GoalServiceUnitTest {
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
         when(hobbyRepository.findById(dto.getHobbyId())).thenReturn(Optional.empty());
 
-        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () ->
-                goalService.addGoalToLoggedUser(dto, email));
-
+        assertThrows(EntityNotFoundException.class, () -> goalService.addGoalToLoggedUser(dto, email));
         verify(goalRepository, never()).save(any());
     }
 
@@ -140,8 +136,7 @@ class GoalServiceUnitTest {
         Long goalId = 1L;
         when(goalRepository.findById(goalId)).thenReturn(Optional.empty());
 
-        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () ->
-                goalService.getGoalById(goalId));
+        assertThrows(EntityNotFoundException.class, () -> goalService.getGoalById(goalId));
     }
 
     @Test
@@ -182,9 +177,7 @@ class GoalServiceUnitTest {
 
         when(goalRepository.findById(goalId)).thenReturn(Optional.empty());
 
-        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class,
-                () -> goalService.editGoal(goalId, dto));
-
+        assertThrows(EntityNotFoundException.class, () -> goalService.editGoal(goalId, dto));
         verifyNoInteractions(hobbyRepository);
         verify(goalRepository, never()).save(any());
     }
@@ -202,9 +195,7 @@ class GoalServiceUnitTest {
         when(goalRepository.findById(goalId)).thenReturn(Optional.of(goal));
         when(hobbyRepository.findById(dto.getHobbyId())).thenReturn(Optional.empty());
 
-        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class,
-                () -> goalService.editGoal(goalId, dto));
-
+        assertThrows(EntityNotFoundException.class, () -> goalService.editGoal(goalId, dto));
         verify(goalRepository, never()).save(any());
     }
 
@@ -294,8 +285,7 @@ class GoalServiceUnitTest {
         Long goalId = 1L;
         when(goalRepository.findById(goalId)).thenReturn(Optional.empty());
 
-        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () ->
-                goalService.deleteGoal(goalId));
+        assertThrows(EntityNotFoundException.class, () -> goalService.deleteGoal(goalId));
 
         verifyNoInteractions(hobbyRepository);
         verify(goalRepository, never()).delete(any());
@@ -304,7 +294,6 @@ class GoalServiceUnitTest {
     @Test
     void deleteGoal_ShouldRemoveGoalFromHobbyAndDeleteGoal() {
         Long goalId = 1L;
-
         Goal goal = new Goal();
         Hobby hobby = new Hobby();
         hobby.setGoals(new ArrayList<>());
@@ -317,7 +306,6 @@ class GoalServiceUnitTest {
         goalService.deleteGoal(goalId);
 
         assertFalse(hobby.getGoals().contains(goal));
-
         verify(hobbyRepository).save(hobby);
         verify(goalRepository).delete(goal);
     }
@@ -330,8 +318,7 @@ class GoalServiceUnitTest {
 
         when(goalRepository.findById(goalId)).thenReturn(Optional.empty());
 
-        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () ->
-                goalService.getGoalDeadline(goalId));
+        assertThrows(EntityNotFoundException.class, () -> goalService.getGoalDeadline(goalId));
     }
 
     @Test
@@ -355,8 +342,7 @@ class GoalServiceUnitTest {
 
         when(goalRepository.findById(goalId)).thenReturn(Optional.empty());
 
-        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () ->
-                goalService.getGoalTargetAmount(goalId));
+        assertThrows(EntityNotFoundException.class, () -> goalService.getGoalTargetAmount(goalId));
     }
 
     @Test
