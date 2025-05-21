@@ -36,14 +36,12 @@ public class GoalController {
                            @RequestParam(defaultValue = "deadline") String sortBy,
                            @RequestParam(defaultValue = "asc") String sortDir) {
 
-        // Permitem sortarea doar după deadline și hobbyName
         if (!sortBy.equals("deadline") && !sortBy.equals("hobbyName")) {
-            sortBy = "deadline"; // fallback la sortare implicită
+            sortBy = "deadline";
         }
 
         String userEmail = principal.getName();
 
-        // Transformă hobbyName în path corect pentru sortare prin join
         Sort sort;
         if (sortBy.equals("hobbyName")) {
             sort = sortDir.equalsIgnoreCase("asc") ?

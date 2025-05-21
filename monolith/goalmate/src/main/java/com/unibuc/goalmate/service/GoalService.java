@@ -37,8 +37,6 @@ public class GoalService {
                 ));
     }
 
-
-
     public void addGoalToLoggedUser(GoalRequestDto goalRequestDto, String userEmail) {
         GoalMateUser user = userRepository.findByEmail(userEmail).orElseThrow(
                 () -> new EntityNotFoundException("User not found")

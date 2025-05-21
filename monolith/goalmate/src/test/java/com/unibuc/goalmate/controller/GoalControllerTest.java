@@ -7,12 +7,16 @@ import com.unibuc.goalmate.security.UserDetailsServiceImpl;
 import com.unibuc.goalmate.service.AuthService;
 import com.unibuc.goalmate.service.GoalService;
 import com.unibuc.goalmate.service.HobbyService;
+import com.unibuc.goalmate.util.FormatUtils;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -37,6 +41,9 @@ class GoalControllerTest {
     @MockitoBean
     private UserDetailsServiceImpl userDetailsService;
 
+    @MockitoBean(name = "formatUtils")
+    private FormatUtils formatUtils;
+
     @MockitoBean
     private AuthService authService;
 
@@ -46,30 +53,43 @@ class GoalControllerTest {
     @MockitoBean
     private HobbyService hobbyService;
 
-//    @Test
-//    @WithMockUser(username = "user@example.com", roles = {"USER"})
-//    void getGoalSessions_Authenticated_ShouldReturnHomePage() throws Exception {
-//        List<GoalResponseDto> goals = List.of(new GoalResponseDto(
-//                1L,
-//                1L,
-//                "Drawing",
-//                "Learning oil painting",
-//                100f,
-//                20f,
-//                "drawings",
-//                LocalDate.now().plusMonths(3)
-//        ));
-//
-//        String email = "user@example.com";
-//        when(goalService.getGoalsByLoggedUser(email)).thenReturn(goals);
-//        when(authService.isCurrentUserAdmin()).thenReturn(true);
-//
-//        mockMvc.perform(get("/home/goals"))
-//                .andExpect(status().isOk())
-//                .andExpect(view().name("home/goal_page"))
-//                .andExpect(model().attribute("isAdmin", true))
-//                .andExpect(model().attribute("goals", goals));
-//    }
+    @Test
+    @WithMockUser(username = "user@example.com", roles = {"USER"})
+    void getGoals_Authenticated_ShouldReturnHomePage() throws Exception {
+        List<GoalResponseDto> goals = List.of(new GoalResponseDto(
+                1L,
+                1L,
+                "Drawing",
+                "Learning oil painting",
+                100f,
+                20f,
+                "drawings",
+                LocalDate.now().plusMonths(3)
+        ));
+
+        Page<GoalResponseDto> goalPage = new PageImpl<>(goals);
+        String email = "user@example.com";
+
+        when(goalService.getGoalsByLoggedUser(eq(email), any(Pageable.class))).thenReturn(goalPage);
+        when(authService.isCurrentUserAdmin()).thenReturn(true);
+        when(formatUtils.formatSmartDecimal(any())).thenReturn("formatted");
+
+        mockMvc.perform(get("/home/goals")
+                        .param("page", "0")
+                        .param("size", "8")
+                        .param("sortBy", "deadline")
+                        .param("sortDir", "asc")
+                        .principal(() -> email))
+                .andExpect(status().isOk())
+                .andExpect(view().name("home/goal_page"))
+                .andExpect(model().attribute("isAdmin", true))
+                .andExpect(model().attribute("goals", goals))
+                .andExpect(model().attribute("currentPage", 0))
+                .andExpect(model().attribute("totalPages", 1))
+                .andExpect(model().attribute("totalItems", 1L))
+                .andExpect(model().attribute("sortBy", "deadline"))
+                .andExpect(model().attribute("sortDir", "asc"));
+    }
 
     @Test
     void getGoalSessions_NotAuthenticated_ShouldRedirectLoginPage() throws Exception {

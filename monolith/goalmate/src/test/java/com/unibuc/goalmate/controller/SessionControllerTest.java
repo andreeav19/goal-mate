@@ -114,7 +114,7 @@ class SessionControllerTest {
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("sessions/add_session_page"))
-        ;
+                .andExpect(model().attributeExists("errors"));
 
         verify(sessionService, times(0)).addSessionToGoal(1L, dto);
     }
