@@ -1,7 +1,0 @@
-<!-- templates/fragments/number_format.html -->
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<th:block th:fragment="smartDecimal(value)">
-    <span th:text="${#numbers.formatDecimal(value, 0, value % 1 == 0 ? 0 : 2)}"></span>
-</th:block>
-</html>
