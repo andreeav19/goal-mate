@@ -11,11 +11,27 @@
 
         <th:block th:insert="~{fragments/section_header :: section_header('User List', null, null)}"></th:block>
 
+        <!-- Sort form -->
+        <div class="d-flex justify-content-end mb-3 me-5">
+            <form method="get" class="d-flex align-items-center">
+                <label for="sortBy" class="me-2 mb-0">Sort by:</label>
+                <select id="sortBy" name="sortBy" class="form-select me-2" style="width: auto;" onchange="this.form.submit()">
+                    <option value="email" th:selected="${sortBy == 'email'}">Email</option>
+                    <option value="username" th:selected="${sortBy == 'username'}">Username</option>
+                </select>
+                <input type="hidden" name="page" th:value="${currentPage}" />
+                <input type="hidden" name="sortDir" th:value="${reverseSortDir}" />
+                <button type="submit" class="btn btn-outline-secondary ms-2">
+                    <i class="bi" th:classappend="${sortDir == 'asc' ? 'bi-sort-down' : 'bi-sort-up'}"></i>
+                </button>
+            </form>
+        </div>
+
         <div class="w-75 ms-5">
             <table class="table table-hover">
                 <thead>
                 <tr>
-                    <th scope="col"></th>
+                    <th scope="col">#</th>
                     <th scope="col">Username</th>
                     <th scope="col">Email</th>
                     <th scope="col">Roles</th>
@@ -30,30 +46,29 @@
                     <td>
                         <div th:if="${user.isModifiable}" class="d-flex flex-wrap gap-2">
                             <div th:each="role : ${user.roles}" class="position-relative">
-                            <span class="badge rounded-pill pe-4"
-                                  th:classappend="${role == 'ADMIN' ? 'text-bg-info' : 'text-bg-secondary'}"
-                                  style="position: relative; padding-right: 1.5rem;">
-                                <span th:text="${role}"></span>
-
-                                <form method="post" th:action="@{/admin/delete-role}"
-                                      style="position: absolute; top: 0.15rem; right: 0.4rem; margin: 0;">
-                                    <input type="hidden" name="roleName" th:value="${role}"/>
-                                    <input type="hidden" name="userId" th:value="${user.userId}"/>
-                                    <button type="submit"
-                                            class="btn p-0 m-0 border-0 bg-transparent text-white"
-                                            style="font-size: 0.75rem; line-height: 1;">×</button>
-                                </form>
-                            </span>
+                                <span class="badge rounded-pill pe-4"
+                                      th:classappend="${role == 'ADMIN' ? 'text-bg-info' : 'text-bg-secondary'}"
+                                      style="position: relative; padding-right: 1.5rem;">
+                                    <span th:text="${role}"></span>
+                                    <form method="post" th:action="@{/admin/delete-role}"
+                                          style="position: absolute; top: 0.15rem; right: 0.4rem; margin: 0;">
+                                        <input type="hidden" name="roleName" th:value="${role}"/>
+                                        <input type="hidden" name="userId" th:value="${user.userId}"/>
+                                        <button type="submit"
+                                                class="btn p-0 m-0 border-0 bg-transparent text-white"
+                                                style="font-size: 0.75rem; line-height: 1;">×</button>
+                                    </form>
+                                </span>
                             </div>
                         </div>
 
                         <div th:if="${!user.isModifiable}" class="d-flex flex-wrap gap-2">
                             <div th:each="role : ${user.roles}" class="position-relative">
-                            <span class="badge rounded-pill pe-4"
-                                  th:classappend="${role == 'ADMIN' ? 'text-bg-info' : 'text-bg-secondary'}"
-                                  style="position: relative; padding-right: 1.5rem;">
-                                <span th:text="${role}"></span>
-                            </span>
+                                <span class="badge rounded-pill pe-4"
+                                      th:classappend="${role == 'ADMIN' ? 'text-bg-info' : 'text-bg-secondary'}"
+                                      style="position: relative; padding-right: 1.5rem;">
+                                    <span th:text="${role}"></span>
+                                </span>
                             </div>
                         </div>
                     </td>
@@ -75,7 +90,6 @@
                                     </li>
                                 </ul>
                             </div>
-
                             <div th:if="${user.unassignedRoles == null or user.unassignedRoles.isEmpty()}">
                                 <p>No roles available.</p>
                             </div>
@@ -88,10 +102,32 @@
                 </tr>
                 </tbody>
             </table>
+
+            <!-- Pagination -->
+            <nav aria-label="User pagination" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                        <a class="page-link" th:href="@{/admin(page=${currentPage - 1}, size=${8}, sortBy=${sortBy}, sortDir=${sortDir})}" aria-label="Previous">
+                            <span aria-hidden="true"><i class="bi bi-arrow-left"></i></span>
+                        </a>
+                    </li>
+                    <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                        th:classappend="${i == currentPage} ? 'active'">
+                        <a class="page-link"
+                           th:href="@{/admin(page=${i}, size=${8}, sortBy=${sortBy}, sortDir=${sortDir})}"
+                           th:text="${i + 1}"></a>
+                    </li>
+                    <li class="page-item" th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
+                        <a class="page-link" th:href="@{/admin(page=${currentPage + 1}, size=${8}, sortBy=${sortBy}, sortDir=${sortDir})}" aria-label="Next">
+                            <span aria-hidden="true"><i class="bi bi-arrow-right"></i></span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
-
 </div>
+
 <th:block th:insert="~{fragments/script_end :: script_end}"></th:block>
 </body>
 </html>

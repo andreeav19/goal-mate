@@ -52,9 +52,9 @@
 
                         <p class="mb-1">
                             Progress:
-                            <th:block th:insert="~{fragments/number_format :: smartDecimal(${goal.currentAmount})}" />
+                            <span th:text="${@formatUtils.formatSmartDecimal(goal.currentAmount)}">0</span>
                             out of
-                            <th:block th:insert="~{fragments/number_format :: smartDecimal(${goal.targetAmount})}" />
+                            <span th:text="${@formatUtils.formatSmartDecimal(goal.targetAmount)}">0</span>
                             <span th:text="${goal.unit}">unit</span>
                         </p>
 
