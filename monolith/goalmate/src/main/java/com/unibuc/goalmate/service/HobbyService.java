@@ -8,6 +8,10 @@ import com.unibuc.goalmate.repository.HobbyRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,13 +22,13 @@ import java.util.stream.Collectors;
 public class HobbyService {
     private final HobbyRepository hobbyRepository;
 
-    public List<HobbyResponseDto> getAllHobbies() {
-        return hobbyRepository.findAll().stream()
-                .map(hobby -> new HobbyResponseDto(
-                        hobby.getName(),
-                        hobby.getDescription()
-                ))
-                .collect(Collectors.toList());
+    public Page<HobbyResponseDto> getAllHobbies(int page, int size, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return hobbyRepository.findAll(pageable).map(hobby ->
+                new HobbyResponseDto(hobby.getName(), hobby.getDescription())
+        );
     }
 
     public void addHobby(HobbyRequestDto request) {
