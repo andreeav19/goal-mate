@@ -16,7 +16,7 @@ public class UserResponseDto {
     private Long userId;
     private String username;
     private String email;
-    Map<String, Boolean> roleMap;
-    List<String> unassignedRoles;
+    private Map<String, Boolean> roleMap;
+    private List<String> unassignedRoles;
     private Boolean isModifiable;
 }

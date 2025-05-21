@@ -9,6 +9,7 @@ import com.unibuc.goalmate.repository.GoalMateUserRepository;
 import com.unibuc.goalmate.repository.RoleRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -20,40 +21,47 @@ public class UserService {
     private final GoalMateUserRepository userRepository;
     private final RoleRepository roleRepository;
 
-    public List<UserResponseDto> getAllUsers(String userEmail) {
-        return userRepository.findAll().stream().map(
-                user -> {
-                    Map<String, Boolean> roleMap = user.getRoles().stream()
-                            .map(role -> role.getRoleName().name())
-                            .sorted()
-                            .collect(Collectors.toMap(
-                                    roleName -> roleName,
-                                    roleName -> !roleName.equals("USER"),
-                                    (existing, replacement) -> replacement,
-                                    TreeMap::new
-                            ));
+    public Page<UserResponseDto> getAllUsers(String userEmail, int page, int size, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
 
-                    List<String> allRoles = roleRepository.findAll().stream()
-                            .map(role -> role.getRoleName().name())
-                            .toList();
+        Page<GoalMateUser> userPage = userRepository.findAll(pageable);
 
-                    List<String> missingRoles = allRoles.stream()
-                            .filter(role -> !roleMap.containsKey(role))
-                            .toList();
+        List<UserResponseDto> userDtos = userPage.stream().map(user -> {
+            Map<String, Boolean> roleMap = user.getRoles().stream()
+                    .map(role -> role.getRoleName().name())
+                    .sorted()
+                    .collect(Collectors.toMap(
+                            roleName -> roleName,
+                            roleName -> !roleName.equals("USER"),
+                            (existing, replacement) -> replacement,
+                            TreeMap::new
+                    ));
 
-                    boolean isModifiable = !Objects.equals(userEmail, user.getEmail()) && user.getUserId() != 1;
-                    if (!isModifiable) roleMap.replaceAll((k, v) -> false);
+            List<String> allRoles = roleRepository.findAll().stream()
+                    .map(role -> role.getRoleName().name())
+                    .toList();
 
-                    return new UserResponseDto(
-                            user.getUserId(),
-                            user.getUsername(),
-                            user.getEmail(),
-                            roleMap,
-                            missingRoles,
-                            isModifiable
-                    );
-                }
-        ).toList();
+            List<String> missingRoles = allRoles.stream()
+                    .filter(role -> !roleMap.containsKey(role))
+                    .toList();
+
+            boolean isModifiable = !Objects.equals(userEmail, user.getEmail()) && user.getUserId() != 1;
+            if (!isModifiable) {
+                roleMap.replaceAll((k, v) -> false);
+            }
+
+            return new UserResponseDto(
+                    user.getUserId(),
+                    user.getUsername(),
+                    user.getEmail(),
+                    roleMap,
+                    missingRoles,
+                    isModifiable
+            );
+        }).toList();
+
+        return new PageImpl<>(userDtos, pageable, userPage.getTotalElements());
     }
 
     public void addUserRole(UserRoleRequestDto requestDto) {
