@@ -98,6 +98,9 @@ public class GoalService {
         Hobby oldHobby = goal.getHobby();
 
         if (!newHobby.equals(oldHobby)) {
+            if (oldHobby.getGoals() == null) {
+                oldHobby.setGoals(new ArrayList<>());
+            }
             oldHobby.getGoals().remove(goal);
             if (newHobby.getGoals() == null) {
                 newHobby.setGoals(new ArrayList<>());
