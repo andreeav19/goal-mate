@@ -1,5 +1,6 @@
 package com.unibuc.goalmate.service;
 
+import com.unibuc.goalmate.dto.UserResponseDto;
 import com.unibuc.goalmate.dto.UserRoleRequestDto;
 import com.unibuc.goalmate.model.GoalMateUser;
 import com.unibuc.goalmate.model.Role;
@@ -13,10 +14,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -54,6 +55,70 @@ class UserServiceIntegrationTest {
         userRepository.save(testUser);
     }
 
+    @Test
+    void getAllUsers_ShouldReturnPagedUserDtoWithCorrectAttributes() {
+        GoalMateUser secondUser = new GoalMateUser();
+        secondUser.setUsername("second");
+        secondUser.setEmail("second@email.com");
+        secondUser.setPassword("password");
+        secondUser.setRoles(Set.of(adminRole, userRole));
+        userRepository.save(secondUser);
+
+        Page<UserResponseDto> result = userService.getAllUsers("test@email.com", 0, 10, "email", "asc");
+
+        assertEquals(3, result.getTotalElements());
+        List<UserResponseDto> users = result.getContent();
+
+        for (UserResponseDto user : users) {
+            assertNotNull(user.getUserId());
+            assertNotNull(user.getEmail());
+            assertNotNull(user.getUsername());
+            assertNotNull(user.getRoleMap());
+            assertNotNull(user.getUnassignedRoles());
+
+            boolean expectedModifiable = !user.getEmail().equals("test@email.com") && user.getUserId() != 1;
+            assertEquals(expectedModifiable, user.getIsModifiable());
+
+            user.getRoleMap().forEach((roleName, canModify) -> {
+                if (roleName.equals("USER")) {
+                    assertFalse(canModify);
+                } else {
+                    assertEquals(expectedModifiable, canModify);
+                }
+            });
+
+            for (String missing : user.getUnassignedRoles()) {
+                assertFalse(user.getRoleMap().containsKey(missing));
+            }
+        }
+    }
+
+    @Test
+    void getAllUsers_ShouldReturnCorrectPagination() {
+        for (int i = 1; i <= 15; i++) {
+            GoalMateUser user = new GoalMateUser();
+            user.setUsername("user" + i);
+            user.setEmail("user" + i + "@email.com");
+            user.setPassword("password");
+            user.setRoles(Set.of(userRole));
+            userRepository.save(user);
+        }
+
+        Page<UserResponseDto> page1 = userService.getAllUsers("test@email.com", 1, 10, "email", "asc");
+
+        assertEquals(10, page1.getSize());
+        assertEquals(1, page1.getNumber());
+        assertEquals(17, page1.getTotalElements());
+        assertEquals(2, page1.getTotalPages());
+        assertEquals(7, page1.getContent().size());
+
+        List<String> emails = page1.getContent().stream()
+                .map(UserResponseDto::getEmail)
+                .toList();
+        List<String> sortedEmails = new ArrayList<>(emails);
+        Collections.sort(sortedEmails);
+        assertEquals(sortedEmails, emails);
+    }
 
 
     @Test
