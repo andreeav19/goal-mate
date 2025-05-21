@@ -19,10 +19,20 @@ public class HobbyController {
     private final HobbyService hobbyService;
 
     @GetMapping()
-    public String getAllHobbies(Model model) {
+    public String getAllHobbies(Model model,
+                                @RequestParam(defaultValue = "0") int page,
+                                @RequestParam(defaultValue = "10") int size,
+                                @RequestParam(defaultValue = "name") String sortBy,
+                                @RequestParam(defaultValue = "asc") String sortDir) {
+
         model.addAttribute("isAdmin", authService.isCurrentUserAdmin());
-        model.addAttribute("hobbies", hobbyService.getAllHobbies());
-        model.addAttribute("hobbyRequest", new HobbyRequestDto());
+        model.addAttribute("hobbiesPage", hobbyService.getAllHobbies(page, size, sortBy, sortDir));
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
+        model.addAttribute("currentPage", page);
+        model.addAttribute("pageSize", size);
+
         return "hobby/hobbies";
     }
 

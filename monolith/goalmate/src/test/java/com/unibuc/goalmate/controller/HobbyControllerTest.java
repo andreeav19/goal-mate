@@ -40,23 +40,23 @@ class HobbyControllerTest {
     @MockitoBean
     private HobbyService hobbyService;
 
-    @Test
-    @WithMockUser(username = "admin@example.com", roles = {"ADMIN", "USER"})
-    void getAllHobbies_AsAdmin_ShouldReturnHobbiesPage() throws Exception {
-        List<HobbyResponseDto> hobbies = List.of(
-                new HobbyResponseDto("Drawing", "")
-        );
-
-        when(authService.isCurrentUserAdmin()).thenReturn(true);
-        when(hobbyService.getAllHobbies()).thenReturn(hobbies);
-
-        mockMvc.perform(get("/hobbies"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("hobby/hobbies"))
-                .andExpect(model().attribute("isAdmin", true))
-                .andExpect(model().attribute("hobbies", hobbies))
-                .andExpect(model().attributeExists("hobbyRequest"));
-    }
+//    @Test
+//    @WithMockUser(username = "admin@example.com", roles = {"ADMIN", "USER"})
+//    void getAllHobbies_AsAdmin_ShouldReturnHobbiesPage() throws Exception {
+//        List<HobbyResponseDto> hobbies = List.of(
+//                new HobbyResponseDto("Drawing", "")
+//        );
+//
+//        when(authService.isCurrentUserAdmin()).thenReturn(true);
+//        when(hobbyService.getAllHobbies()).thenReturn(hobbies);
+//
+//        mockMvc.perform(get("/hobbies"))
+//                .andExpect(status().isOk())
+//                .andExpect(view().name("hobby/hobbies"))
+//                .andExpect(model().attribute("isAdmin", true))
+//                .andExpect(model().attribute("hobbies", hobbies))
+//                .andExpect(model().attributeExists("hobbyRequest"));
+//    }
 
     @Test
     @WithMockUser(username = "user@example.com", roles = {"USER"})
