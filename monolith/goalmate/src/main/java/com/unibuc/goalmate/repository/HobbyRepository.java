@@ -4,6 +4,8 @@ import com.unibuc.goalmate.model.Hobby;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface HobbyRepository extends JpaRepository<Hobby, Long> {
 
@@ -11,4 +13,5 @@ public interface HobbyRepository extends JpaRepository<Hobby, Long> {
 
     boolean existsByName(String name);
 
+    Optional<Hobby> findByName(String name);
 }
