@@ -12,9 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,26 +28,34 @@ public class UserService {
         Page<GoalMateUser> userPage = userRepository.findAll(pageable);
 
         List<UserResponseDto> userDtos = userPage.stream().map(user -> {
-            List<String> userRoles = user.getRoles().stream()
+            Map<String, Boolean> roleMap = user.getRoles().stream()
                     .map(role -> role.getRoleName().name())
                     .sorted()
-                    .toList();
+                    .collect(Collectors.toMap(
+                            roleName -> roleName,
+                            roleName -> !roleName.equals("USER"),
+                            (existing, replacement) -> replacement,
+                            TreeMap::new
+                    ));
 
             List<String> allRoles = roleRepository.findAll().stream()
                     .map(role -> role.getRoleName().name())
                     .toList();
 
             List<String> missingRoles = allRoles.stream()
-                    .filter(role -> !userRoles.contains(role))
+                    .filter(role -> !roleMap.containsKey(role))
                     .toList();
 
             boolean isModifiable = !Objects.equals(userEmail, user.getEmail()) && user.getUserId() != 1;
+            if (!isModifiable) {
+                roleMap.replaceAll((k, v) -> false);
+            }
 
             return new UserResponseDto(
                     user.getUserId(),
                     user.getUsername(),
                     user.getEmail(),
-                    userRoles,
+                    roleMap,
                     missingRoles,
                     isModifiable
             );
@@ -56,7 +63,6 @@ public class UserService {
 
         return new PageImpl<>(userDtos, pageable, userPage.getTotalElements());
     }
-
 
     public void addUserRole(UserRoleRequestDto requestDto) {
         GoalMateUser user = userRepository.findById(requestDto.getUserId()).orElseThrow(
