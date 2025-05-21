@@ -7,6 +7,7 @@ import com.unibuc.goalmate.security.UserDetailsServiceImpl;
 import com.unibuc.goalmate.service.AuthService;
 import com.unibuc.goalmate.service.GoalService;
 import com.unibuc.goalmate.service.HobbyService;
+import com.unibuc.goalmate.util.FormatUtils;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -40,6 +41,9 @@ class GoalControllerTest {
     @MockitoBean
     private UserDetailsServiceImpl userDetailsService;
 
+    @MockitoBean(name = "formatUtils")
+    private FormatUtils formatUtils;
+
     @MockitoBean
     private AuthService authService;
 
@@ -68,12 +72,23 @@ class GoalControllerTest {
 
         when(goalService.getGoalsByLoggedUser(eq(email), any(Pageable.class))).thenReturn(goalPage);
         when(authService.isCurrentUserAdmin()).thenReturn(true);
+        when(formatUtils.formatSmartDecimal(any())).thenReturn("formatted");
 
-        mockMvc.perform(get("/home/goals"))
+        mockMvc.perform(get("/home/goals")
+                        .param("page", "0")
+                        .param("size", "8")
+                        .param("sortBy", "deadline")
+                        .param("sortDir", "asc")
+                        .principal(() -> email))
                 .andExpect(status().isOk())
                 .andExpect(view().name("home/goal_page"))
                 .andExpect(model().attribute("isAdmin", true))
-                .andExpect(model().attribute("goals", goals));
+                .andExpect(model().attribute("goals", goals))
+                .andExpect(model().attribute("currentPage", 0))
+                .andExpect(model().attribute("totalPages", 1))
+                .andExpect(model().attribute("totalItems", 1L))
+                .andExpect(model().attribute("sortBy", "deadline"))
+                .andExpect(model().attribute("sortDir", "asc"));
     }
 
     @Test
