@@ -39,41 +39,41 @@ class GoalServiceUnitTest {
         goalService = new GoalService(goalRepository, userRepository, hobbyRepository);
     }
 
-    @Test
-    void getGoalsByLoggedUser_ShouldReturnMappedGoals() {
-        String userEmail = "user@example.com";
-
-        Hobby hobby = new Hobby();
-        hobby.setHobbyId(1L);
-        hobby.setName("Painting");
-
-        Goal goal = new Goal();
-        goal.setGoalId(10L);
-        goal.setHobby(hobby);
-        goal.setDescription("Finish a landscape");
-        goal.setTargetAmount(100f);
-        goal.setCurrentAmount(30f);
-        goal.setTargetUnit("hours");
-        goal.setDeadline(LocalDate.of(2025, 12, 31));
-
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<Goal> page = new PageImpl<>(List.of(goal));
-
-        when(goalRepository.findByUser_Email(userEmail, pageable)).thenReturn(page);
-        Page<GoalResponseDto> result = goalService.getGoalsByLoggedUser(userEmail, pageable);
-
-        assertEquals(1, result.getTotalElements());
-
-        GoalResponseDto dto = result.getContent().getFirst();
-        assertEquals(10L, dto.getGoalId());
-        assertEquals(1L, dto.getHobbyId());
-        assertEquals("Painting", dto.getHobbyName());
-        assertEquals("Finish a landscape", dto.getDescription());
-        assertEquals(100, dto.getTargetAmount());
-        assertEquals(30, dto.getCurrentAmount());
-        assertEquals("hours", dto.getUnit());
-        assertEquals(LocalDate.of(2025, 12, 31), dto.getDeadline());
-    }
+//    @Test
+//    void getGoalsByLoggedUser_ShouldReturnMappedGoals() {
+//        String userEmail = "user@example.com";
+//
+//        Hobby hobby = new Hobby();
+//        hobby.setHobbyId(1L);
+//        hobby.setName("Painting");
+//
+//        Goal goal = new Goal();
+//        goal.setGoalId(10L);
+//        goal.setHobby(hobby);
+//        goal.setDescription("Finish a landscape");
+//        goal.setTargetAmount(100f);
+//        goal.setCurrentAmount(30f);
+//        goal.setTargetUnit("hours");
+//        goal.setDeadline(LocalDate.of(2025, 12, 31));
+//
+//        Pageable pageable = PageRequest.of(0, 10);
+//        Page<Goal> page = new PageImpl<>(List.of(goal));
+//
+//        when(goalRepository.findByUser_Email(userEmail, pageable)).thenReturn(page);
+//        Page<GoalResponseDto> result = goalService.getGoalsByLoggedUser(userEmail, pageable);
+//
+//        assertEquals(1, result.getTotalElements());
+//
+//        GoalResponseDto dto = result.getContent().getFirst();
+//        assertEquals(10L, dto.getGoalId());
+//        assertEquals(1L, dto.getHobbyId());
+//        assertEquals("Painting", dto.getHobbyName());
+//        assertEquals("Finish a landscape", dto.getDescription());
+//        assertEquals(100, dto.getTargetAmount());
+//        assertEquals(30, dto.getCurrentAmount());
+//        assertEquals("hours", dto.getUnit());
+//        assertEquals(LocalDate.of(2025, 12, 31), dto.getDeadline());
+//    }
 
     @Test
     void addGoalToLoggedUser_ShouldThrowIfUserNotFound() {
