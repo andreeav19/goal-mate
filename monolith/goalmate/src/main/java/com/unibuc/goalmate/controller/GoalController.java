@@ -9,9 +9,6 @@ import com.unibuc.goalmate.util.UtilLogger;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,33 +26,18 @@ public class GoalController {
     private final HobbyService hobbyService;
 
     @GetMapping()
-    public String getGoals(Model model,
-                           Principal principal,
-                           @RequestParam(defaultValue = "0") int page,
-                           @RequestParam(defaultValue = "8") int size,
-                           @RequestParam(defaultValue = "deadline") String sortBy,
-                           @RequestParam(defaultValue = "asc") String sortDir) {
-
-        if (!sortBy.equals("deadline") && !sortBy.equals("hobbyName")) {
-            sortBy = "deadline";
-        }
+    public String getGoals(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "8") int size,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            @RequestParam(required = false) String filterStatus,
+            Model model,
+            Principal principal) {
 
         String userEmail = principal.getName();
 
-        Sort sort;
-        if (sortBy.equals("hobbyName")) {
-            sort = sortDir.equalsIgnoreCase("asc") ?
-                    Sort.by("hobby.name").ascending() :
-                    Sort.by("hobby.name").descending();
-        } else {
-            sort = sortDir.equalsIgnoreCase("asc") ?
-                    Sort.by("deadline").ascending() :
-                    Sort.by("deadline").descending();
-        }
-
-        Pageable pageable = PageRequest.of(page, size, sort);
-
-        Page<GoalResponseDto> goalPage = goalService.getGoalsByLoggedUser(userEmail, pageable);
+        Page<GoalResponseDto> goalPage = goalService.getGoalsByLoggedUser(userEmail, page, size, sortBy, sortDir, filterStatus);
 
         model.addAttribute("goals", goalPage.getContent());
         model.addAttribute("currentPage", page);
@@ -63,11 +45,11 @@ public class GoalController {
         model.addAttribute("totalItems", goalPage.getTotalElements());
         model.addAttribute("sortBy", sortBy);
         model.addAttribute("sortDir", sortDir);
+        model.addAttribute("filterStatus", filterStatus);
         model.addAttribute("isAdmin", authService.isCurrentUserAdmin());
 
         return "home/goal_page";
     }
-
 
     @GetMapping("/add")
     public String getAddGoalPage(Model model) {
@@ -123,12 +105,12 @@ public class GoalController {
         }
 
         goalService.editGoal(id, request);
-        return  "redirect:/home/goals";
+        return "redirect:/home/goals";
     }
 
     @PostMapping("/delete/{id}")
     public String deleteGoal(@PathVariable Long id) {
         goalService.deleteGoal(id);
-        return  "redirect:/home/goals";
+        return "redirect:/home/goals";
     }
 }

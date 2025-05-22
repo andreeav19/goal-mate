@@ -10,11 +10,15 @@ import com.unibuc.goalmate.repository.HobbyRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,18 +27,64 @@ public class GoalService {
     private final GoalMateUserRepository userRepository;
     private final HobbyRepository hobbyRepository;
 
-    public Page<GoalResponseDto> getGoalsByLoggedUser(String userEmail, Pageable pageable) {
-        return goalRepository.findByUser_Email(userEmail, pageable)
-                .map(goal -> new GoalResponseDto(
-                        goal.getGoalId(),
-                        goal.getHobby().getHobbyId(),
-                        goal.getHobby().getName(),
-                        goal.getDescription(),
-                        goal.getTargetAmount(),
-                        goal.getCurrentAmount(),
-                        goal.getTargetUnit(),
-                        goal.getDeadline()
-                ));
+    public Page<GoalResponseDto> getGoalsByLoggedUser(String userEmail, int page, int size, String sortBy, String sortDir, String filterStatus) {
+        List<Goal> allGoals = goalRepository.findByUser_Email(userEmail);
+        LocalDate today = LocalDate.now();
+
+        // Mapping + calcul status
+        List<GoalResponseDto> goalDtos = allGoals.stream()
+                .map(goal -> {
+                    boolean isCompleted = goal.getCurrentAmount() >= goal.getTargetAmount()
+                            && (goal.getDeadline() == null || !goal.getDeadline().isBefore(today));
+                    boolean isFailed = goal.getCurrentAmount() < goal.getTargetAmount()
+                            && goal.getDeadline() != null
+                            && goal.getDeadline().isBefore(today);
+
+                    String status;
+                    if (isCompleted) status = "completed";
+                    else if (isFailed) status = "failed";
+                    else status = "inprogress";
+
+                    return GoalResponseDto.builder()
+                            .goalId(goal.getGoalId())
+                            .hobbyId(goal.getHobby().getHobbyId())
+                            .hobbyName(goal.getHobby().getName())
+                            .description(goal.getDescription())
+                            .targetAmount(goal.getTargetAmount())
+                            .currentAmount(goal.getCurrentAmount())
+                            .unit(goal.getTargetUnit())
+                            .deadline(goal.getDeadline())
+                            .status(status)
+                            .build();
+                })
+                .collect(Collectors.toList());
+
+        // Filtrare după status
+        if (filterStatus != null && !filterStatus.isEmpty()) {
+            goalDtos = goalDtos.stream()
+                    .filter(dto -> dto.getStatus().equalsIgnoreCase(filterStatus))
+                    .collect(Collectors.toList());
+        }
+
+        // Sortare
+        Comparator<GoalResponseDto> comparator = Comparator.comparing(GoalResponseDto::getDeadline, Comparator.nullsLast(Comparator.naturalOrder()));
+
+        if ("hobbyName".equalsIgnoreCase(sortBy)) {
+            comparator = Comparator.comparing(GoalResponseDto::getHobbyName, String.CASE_INSENSITIVE_ORDER);
+        }
+
+        if ("desc".equalsIgnoreCase(sortDir)) {
+            comparator = comparator.reversed();
+        }
+
+        goalDtos.sort(comparator);
+
+        // Paginare
+        int start = page * size;
+        int end = Math.min(start + size, goalDtos.size());
+        List<GoalResponseDto> paginated = (start < end) ? goalDtos.subList(start, end) : new ArrayList<>();
+
+        return new PageImpl<>(paginated, PageRequest.of(page, size), goalDtos.size());
     }
 
     public void addGoalToLoggedUser(GoalRequestDto goalRequestDto, String userEmail) {
@@ -71,16 +121,16 @@ public class GoalService {
         Goal goal = goalRepository.findById(goalId).orElseThrow(
                 () -> new EntityNotFoundException("Goal not found."));
 
-        return new GoalResponseDto(
-                goal.getGoalId(),
-                goal.getHobby().getHobbyId(),
-                goal.getHobby().getName(),
-                goal.getDescription(),
-                goal.getTargetAmount(),
-                goal.getCurrentAmount(),
-                goal.getTargetUnit(),
-                goal.getDeadline()
-        );
+        return GoalResponseDto.builder()
+                .goalId(goal.getGoalId())
+                .hobbyId(goal.getHobby().getHobbyId())
+                .hobbyName(goal.getHobby().getName())
+                .description(goal.getDescription())
+                .targetAmount(goal.getTargetAmount())
+                .currentAmount(goal.getCurrentAmount())
+                .unit(goal.getTargetUnit())
+                .deadline(goal.getDeadline())
+                .build();
     }
 
     public void editGoal(Long goalId, GoalRequestDto goalRequestDto) {
