@@ -151,7 +151,6 @@ class AchievementServiceIntegrationTest {
         goalRepository.save(testGoal);
 
         SessionRequestDto sessionDto = new SessionRequestDto();
-        sessionDto.setDate(LocalDate.now());
 
         achievementService.checkAchievements(testGoal.getGoalId(), sessionDto);
 
@@ -165,8 +164,6 @@ class AchievementServiceIntegrationTest {
     @Test
     void checkAchievements_ShouldDoNothingWhenNoAchievements() {
         SessionRequestDto sessionDto = new SessionRequestDto();
-        sessionDto.setDate(LocalDate.now());
-
         achievementService.checkAchievements(testGoal.getGoalId(), sessionDto);
     }
 }

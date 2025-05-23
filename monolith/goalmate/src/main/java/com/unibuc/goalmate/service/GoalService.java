@@ -184,6 +184,7 @@ public class GoalService {
                 goal.getTargetUnit(),
                 goal.getTargetAmount(),
                 goal.getCurrentAmount(),
+                goal.getDeadline(),
                 goal.getSessions().stream().map(
                         session -> new SessionResponseDto(
                                 session.getSessionId(),

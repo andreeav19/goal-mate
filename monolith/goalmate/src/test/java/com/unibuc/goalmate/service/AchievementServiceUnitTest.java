@@ -157,7 +157,6 @@ class AchievementServiceUnitTest {
         a2.setDateAwarded(null);
 
         SessionRequestDto dto = new SessionRequestDto();
-        dto.setDate(sessionDate);
 
         when(goalRepository.findById(goalId)).thenReturn(Optional.of(goal));
         when(achievementRepository.findByGoal_GoalId(goalId)).thenReturn(List.of(a1, a2));
@@ -179,7 +178,6 @@ class AchievementServiceUnitTest {
         goal.setGoalId(goalId);
 
         SessionRequestDto dto = new SessionRequestDto();
-        dto.setDate(LocalDate.now());
 
         when(goalRepository.findById(goalId)).thenReturn(Optional.of(goal));
         when(achievementRepository.findByGoal_GoalId(goalId)).thenReturn(Collections.emptyList());
@@ -202,7 +200,6 @@ class AchievementServiceUnitTest {
         awarded.setDateAwarded(LocalDate.of(2023, 1, 1)); // Already awarded
 
         SessionRequestDto dto = new SessionRequestDto();
-        dto.setDate(LocalDate.now());
 
         when(goalRepository.findById(goalId)).thenReturn(Optional.of(goal));
         when(achievementRepository.findByGoal_GoalId(goalId)).thenReturn(List.of(awarded));
@@ -219,7 +216,6 @@ class AchievementServiceUnitTest {
         when(goalRepository.findById(goalId)).thenReturn(Optional.empty());
 
         SessionRequestDto dto = new SessionRequestDto();
-        dto.setDate(LocalDate.now());
 
         assertThrows(EntityNotFoundException.class,
                 () -> achievementService.checkAchievements(goalId, dto));
