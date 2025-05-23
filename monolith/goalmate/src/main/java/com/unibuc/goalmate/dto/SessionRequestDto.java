@@ -15,9 +15,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SessionRequestDto {
-    @NotNull(message = "Session date must be completed.")
-    private LocalDate date;
-
     @NotNull(message = "Session progress must be specified.")
     @DecimalMin(value = "0.1", message = "Progress amount must be at least 0.1.")
     private Float progressAmount;

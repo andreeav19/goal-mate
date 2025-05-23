@@ -11,6 +11,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,7 +72,7 @@ public class AchievementService {
             }
 
             if (goal.getCurrentAmount() >= achievement.getAmountToReach()) {
-                achievement.setDateAwarded(requestDto.getDate());
+                achievement.setDateAwarded(LocalDate.now());
                 achievementRepository.save(achievement);
             }
         }

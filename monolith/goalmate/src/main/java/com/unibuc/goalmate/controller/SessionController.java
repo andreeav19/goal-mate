@@ -31,6 +31,7 @@ public class SessionController {
 
     @GetMapping("/add")
     public String getAddSessionPage(@PathVariable Long id, Model model) {
+//        model.addAttribute("today", LocalDate.now());
         model.addAttribute("unit", goalService.getGoalUnit(id));
         return addSessionModelAttributes(id, model);
     }
