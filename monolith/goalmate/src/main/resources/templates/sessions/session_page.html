@@ -38,7 +38,7 @@
                 <tr th:each="goalSession, iter : ${goalSessions.sessions}">
                     <th scope="row" th:text="${iter.index + 1}"></th>
                     <td th:text="${goalSession.date}">Date</td>
-                    <td th:text="${goalSession.progressAmount}">Progress</td>
+                    <td th:text="${goalSession.progressAmount + ' ' + goalSessions.unit}">Progress</td>
                     <td>
                         <form
                             th:action="@{
@@ -53,7 +53,7 @@
                 </tbody>
             </table>
         </div>
-        
+
         <div th:if="${goalSessions.sessions == null or goalSessions.sessions.isEmpty()}" class="text-center mt-5">
             <h4 class="text-muted">You don't have any sessions yet.</h4>
         </div>
