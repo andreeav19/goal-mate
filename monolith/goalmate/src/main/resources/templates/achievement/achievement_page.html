@@ -8,14 +8,16 @@
     </div>
 
     <div class="flex-grow-1 px-3 mt-5">
-        <div th:if="${goalAchievements.goalDeadline == null or goalAchievements.goalDeadline >= today}">
+        <div th:if="${goalAchievements.currentAmount < goalAchievements.targetAmount and
+                (goalAchievements.goalDeadline == null or goalAchievements.goalDeadline >= today)}">
             <th:block th:insert="~{fragments/section_header :: section_header(
             ${#strings.capitalize(goalAchievements.goalName)} + ' Achievements',
             'Add Achievement',
             '/home/goals/' + ${goalAchievements.goalId} + '/achievements/add'
             )}"></th:block>
         </div>
-        <div th:if="${goalAchievements.goalDeadline != null and goalAchievements.goalDeadline < today}">
+        <div th:if="${goalAchievements.currentAmount >= goalAchievements.targetAmount or
+                (goalAchievements.goalDeadline != null and goalAchievements.goalDeadline < today)}">
             <th:block th:insert="~{fragments/section_header :: section_header(
             ${#strings.capitalize(goalAchievements.goalName)} + ' Achievements',
             null,
