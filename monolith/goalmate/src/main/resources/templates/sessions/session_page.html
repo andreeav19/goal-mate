@@ -24,7 +24,7 @@
             )}"></th:block>
         </div>
 
-        <div class="w-75 mx-auto">
+        <div th:if="${goalSessions.sessions != null and !goalSessions.sessions.isEmpty()}" class="w-75 mx-auto">
             <table class="table table-hover">
                 <thead>
                 <tr>
@@ -53,16 +53,10 @@
                 </tbody>
             </table>
         </div>
-
-<!--        <a th:href="@{/home/goals/sessions/{id}(id=${goalSession.sessionId})}" class="card-link">Edit</a>-->
-<!--        <form th:action="@{/home/goals/sessions/delete/{id}(id=${goalSession.sessionId})}"-->
-<!--              method="POST" style="display: inline;">-->
-<!--            <input type="hidden" name="_method" value="DELETE">-->
-<!--            <button type="submit" style="background: none; border: none; color: #ff0044;-->
-<!--                              text-decoration: underline; cursor: pointer;">-->
-<!--                Delete-->
-<!--            </button>-->
-<!--        </form>-->
+        
+        <div th:if="${goalSessions.sessions == null or goalSessions.sessions.isEmpty()}" class="text-center mt-5">
+            <h4 class="text-muted">You don't have any sessions yet.</h4>
+        </div>
     </div>
 
 </div>

@@ -14,131 +14,137 @@
         <th:block
                 th:insert="~{fragments/section_header :: section_header('Goals', 'Add Goal', '/home/goals/add')}"></th:block>
 
-        <form method="get" class="d-flex justify-content-between align-items-center mb-3">
-            <!-- Filter -->
-            <div class="d-flex align-items-center gap-2">
-                <label for="filterStatus" class="mb-0">Filter by goal status:</label>
-                <select id="filterStatus" name="filterStatus" class="form-select" style="width: 160px;"
-                        onchange="this.form.submit()">
-                    <option value="" th:selected="${filterStatus == null or filterStatus == ''}">All</option>
-                    <option value="inprogress" th:selected="${filterStatus == 'inprogress'}">In Progress</option>
-                    <option value="completed" th:selected="${filterStatus == 'completed'}">Completed</option>
-                    <option value="failed" th:selected="${filterStatus == 'failed'}">Failed</option>
-                </select>
-            </div>
+        <div th:if="${goals != null and !goals.isEmpty()}">
+            <form method="get" class="d-flex justify-content-between align-items-center mb-3">
+                <!-- Filter -->
+                <div class="d-flex align-items-center gap-2">
+                    <label for="filterStatus" class="mb-0">Filter by goal status:</label>
+                    <select id="filterStatus" name="filterStatus" class="form-select" style="width: 160px;"
+                            onchange="this.form.submit()">
+                        <option value="" th:selected="${filterStatus == null or filterStatus == ''}">All</option>
+                        <option value="inprogress" th:selected="${filterStatus == 'inprogress'}">In Progress</option>
+                        <option value="completed" th:selected="${filterStatus == 'completed'}">Completed</option>
+                        <option value="failed" th:selected="${filterStatus == 'failed'}">Failed</option>
+                    </select>
+                </div>
 
-            <!-- Sort -->
-            <div class="d-flex align-items-center gap-2">
-                <label for="sortBy" class="mb-0">Sort by:</label>
-                <select id="sortBy" name="sortBy" class="form-select" style="width: auto;"
-                        onchange="this.form.submit()">
-                    <option value="deadline" th:selected="${sortBy == 'deadline'}">Deadline</option>
-                    <option value="hobbyName" th:selected="${sortBy == 'hobbyName'}">Hobby Name</option>
-                </select>
+                <!-- Sort -->
+                <div class="d-flex align-items-center gap-2">
+                    <label for="sortBy" class="mb-0">Sort by:</label>
+                    <select id="sortBy" name="sortBy" class="form-select" style="width: auto;"
+                            onchange="this.form.submit()">
+                        <option value="deadline" th:selected="${sortBy == 'deadline'}">Deadline</option>
+                        <option value="hobbyName" th:selected="${sortBy == 'hobbyName'}">Hobby Name</option>
+                    </select>
 
-                <input type="hidden" name="page" th:value="${currentPage}"/>
-                <input type="hidden" name="sortDir" th:value="${sortDir == 'asc' ? 'desc' : 'asc'}"/>
-                <button type="submit" class="btn btn-outline-secondary ms-2">
-                    <i class="bi" th:classappend="${sortDir == 'asc' ? 'bi-sort-down' : 'bi-sort-up'}"></i>
-                </button>
-            </div>
-        </form>
+                    <input type="hidden" name="page" th:value="${currentPage}"/>
+                    <input type="hidden" name="sortDir" th:value="${sortDir == 'asc' ? 'desc' : 'asc'}"/>
+                    <button type="submit" class="btn btn-outline-secondary ms-2">
+                        <i class="bi" th:classappend="${sortDir == 'asc' ? 'bi-sort-down' : 'bi-sort-up'}"></i>
+                    </button>
+                </div>
+            </form>
 
-        <div class="row row-cols-1 row-cols-md-4 g-4">
-            <div th:each="goal : ${goals}" class="col">
-                <div class="card h-100 shadow-sm border rounded-4" style="background-color: #f8f9fa;">
-                    <div class="card-body d-flex flex-column p-4">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <h5 class="card-title fw-semibold fs-5 mb-0">
-                                <i class="me-2 bi bi-check-circle-fill text-success"
-                                   th:if="${goal.status == 'completed'}"></i>
+            <div class="row row-cols-1 row-cols-md-4 g-4">
+                <div th:each="goal : ${goals}" class="col">
+                    <div class="card h-100 shadow-sm border rounded-4" style="background-color: #f8f9fa;">
+                        <div class="card-body d-flex flex-column p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title fw-semibold fs-5 mb-0">
+                                    <i class="me-2 bi bi-check-circle-fill text-success"
+                                       th:if="${goal.status == 'completed'}"></i>
 
-                                <i class="me-2 bi bi-x-circle-fill text-danger"
-                                   th:if="${goal.status == 'failed'}"></i>
+                                    <i class="me-2 bi bi-x-circle-fill text-danger"
+                                       th:if="${goal.status == 'failed'}"></i>
 
-                                <i class="me-2 bi bi-hourglass-split text-warning"
-                                   th:if="${goal.status != 'completed' and goal.status != 'failed'}"></i>
+                                    <i class="me-2 bi bi-hourglass-split text-warning"
+                                       th:if="${goal.status != 'completed' and goal.status != 'failed'}"></i>
 
-                                <span th:text="${#strings.capitalize(goal.hobbyName)}">Hobby Goal</span>
-                            </h5>
-                            <div class="d-flex gap-2">
-                                <a th:href="@{/home/goals/{id}(id=${goal.goalId})}" class="text-secondary"
-                                   title="Edit Goal">
-                                    <i class="bi bi-pencil-square fs-5"></i>
+                                    <span th:text="${#strings.capitalize(goal.hobbyName)}">Hobby Goal</span>
+                                </h5>
+                                <div class="d-flex gap-2">
+                                    <a th:href="@{/home/goals/{id}(id=${goal.goalId})}" class="text-secondary"
+                                       title="Edit Goal">
+                                        <i class="bi bi-pencil-square fs-5"></i>
+                                    </a>
+                                    <form th:action="@{/home/goals/delete/{id}(id=${goal.goalId})}" method="POST"
+                                          style="display:inline;">
+                                        <input type="hidden" name="_method" value="DELETE"/>
+                                        <button type="submit" class="btn btn-link p-0 text-danger" title="Delete Goal"
+                                                style="text-decoration: none;">
+                                            <i class="bi bi-trash3 fs-5"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <p class="mb-1">
+                                <span th:text="${@formatUtils.formatSmartDecimal(goal.currentAmount)} + ' / ' + ${@formatUtils.formatSmartDecimal(goal.targetAmount)} + ' ' + ${goal.unit}">0 / 0 unit</span>
+                            </p>
+
+                            <div class="progress" style="height: 10px;">
+                                <div class="progress-bar" role="progressbar"
+                                     th:with="percentage=${goal.targetAmount > 0} ? (${goal.currentAmount.doubleValue()} * 100.0 / ${goal.targetAmount.doubleValue()}) : 0.0"
+                                     th:style="'width:' + ${percentage} + '%'"
+                                     aria-valuemin="0"
+                                     th:aria-valuenow="${goal.currentAmount}"
+                                     th:aria-valuemax="${goal.targetAmount}">
+                                </div>
+                            </div>
+
+                            <p class="mb-3 text-secondary small" th:if="${goal.deadline != null}"
+                               th:text="'Deadline: ' + ${#temporals.format(goal.deadline, 'dd MMMM yyyy')}">Deadline</p>
+                            <p class="mb-3 text-secondary small" th:if="${goal.deadline == null}">No target deadline.</p>
+
+                            <h6 class="card-subtitle text-muted mb-2" th:text="${goal.description}">No description</h6>
+
+                            <div class="d-flex justify-content-between gap-2 mt-auto pt-2 border-top pt-3">
+                                <a th:href="@{/home/goals/{id}/sessions(id=${goal.goalId})}"
+                                   class="btn btn-sm btn-outline-primary flex-fill text-nowrap" style="font-size: 0.75rem;">
+                                    <i class="bi bi-clock-history me-1"></i>Sessions
                                 </a>
-                                <form th:action="@{/home/goals/delete/{id}(id=${goal.goalId})}" method="POST"
-                                      style="display:inline;">
-                                    <input type="hidden" name="_method" value="DELETE"/>
-                                    <button type="submit" class="btn btn-link p-0 text-danger" title="Delete Goal"
-                                            style="text-decoration: none;">
-                                        <i class="bi bi-trash3 fs-5"></i>
-                                    </button>
-                                </form>
+                                <a th:href="@{/home/goals/{id}/achievements(id=${goal.goalId})}"
+                                   class="btn btn-sm btn-outline-success flex-fill text-nowrap" style="font-size: 0.75rem;">
+                                    <i class="bi bi-trophy me-1"></i>Achievements
+                                </a>
                             </div>
-                        </div>
-
-                        <p class="mb-1">
-                            <span th:text="${@formatUtils.formatSmartDecimal(goal.currentAmount)} + ' / ' + ${@formatUtils.formatSmartDecimal(goal.targetAmount)} + ' ' + ${goal.unit}">0 / 0 unit</span>
-                        </p>
-
-                        <div class="progress" style="height: 10px;">
-                            <div class="progress-bar" role="progressbar"
-                                 th:with="percentage=${goal.targetAmount > 0} ? (${goal.currentAmount.doubleValue()} * 100.0 / ${goal.targetAmount.doubleValue()}) : 0.0"
-                                 th:style="'width:' + ${percentage} + '%'"
-                                 aria-valuemin="0"
-                                 th:aria-valuenow="${goal.currentAmount}"
-                                 th:aria-valuemax="${goal.targetAmount}">
-                            </div>
-                        </div>
-
-                        <p class="mb-3 text-secondary small" th:if="${goal.deadline != null}"
-                           th:text="'Deadline: ' + ${#temporals.format(goal.deadline, 'dd MMMM yyyy')}">Deadline</p>
-                        <p class="mb-3 text-secondary small" th:if="${goal.deadline == null}">No target deadline.</p>
-
-                        <h6 class="card-subtitle text-muted mb-2" th:text="${goal.description}">No description</h6>
-
-                        <div class="d-flex justify-content-between gap-2 mt-auto pt-2 border-top pt-3">
-                            <a th:href="@{/home/goals/{id}/sessions(id=${goal.goalId})}"
-                               class="btn btn-sm btn-outline-primary flex-fill text-nowrap" style="font-size: 0.75rem;">
-                                <i class="bi bi-clock-history me-1"></i>Sessions
-                            </a>
-                            <a th:href="@{/home/goals/{id}/achievements(id=${goal.goalId})}"
-                               class="btn btn-sm btn-outline-success flex-fill text-nowrap" style="font-size: 0.75rem;">
-                                <i class="bi bi-trophy me-1"></i>Achievements
-                            </a>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Pagination -->
+            <nav aria-label="Goal pagination" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <li th:classappend="${currentPage == 0} ? 'disabled'" class="page-item">
+                        <a class="page-link"
+                           th:href="@{/home/goals(page=${currentPage - 1}, size=${8}, sortBy=${sortBy}, sortDir=${sortDir}, filterStatus=${filterStatus})}"
+                           aria-label="Previous">
+                            <span aria-hidden="true"><i class="bi bi-arrow-left"></i></span>
+                        </a>
+                    </li>
+
+                    <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                        th:classappend="${i == currentPage} ? 'active'">
+                        <a class="page-link"
+                           th:href="@{/home/goals(page=${i}, size=${8}, sortBy=${sortBy}, sortDir=${sortDir}, filterStatus=${filterStatus})}"
+                           th:text="${i + 1}">1</a>
+                    </li>
+
+                    <li th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'" class="page-item">
+                        <a class="page-link"
+                           th:href="@{/home/goals(page=${currentPage + 1}, size=${8}, sortBy=${sortBy}, sortDir=${sortDir}, filterStatus=${filterStatus})}"
+                           aria-label="Next">
+                            <span aria-hidden="true"><i class="bi bi-arrow-right"></i></span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
 
-        <!-- Pagination -->
-        <nav aria-label="Goal pagination" class="mt-4">
-            <ul class="pagination justify-content-center">
-                <li th:classappend="${currentPage == 0} ? 'disabled'" class="page-item">
-                    <a class="page-link"
-                       th:href="@{/home/goals(page=${currentPage - 1}, size=${8}, sortBy=${sortBy}, sortDir=${sortDir}, filterStatus=${filterStatus})}"
-                       aria-label="Previous">
-                        <span aria-hidden="true"><i class="bi bi-arrow-left"></i></span>
-                    </a>
-                </li>
-
-                <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
-                    th:classappend="${i == currentPage} ? 'active'">
-                    <a class="page-link"
-                       th:href="@{/home/goals(page=${i}, size=${8}, sortBy=${sortBy}, sortDir=${sortDir}, filterStatus=${filterStatus})}"
-                       th:text="${i + 1}">1</a>
-                </li>
-
-                <li th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'" class="page-item">
-                    <a class="page-link"
-                       th:href="@{/home/goals(page=${currentPage + 1}, size=${8}, sortBy=${sortBy}, sortDir=${sortDir}, filterStatus=${filterStatus})}"
-                       aria-label="Next">
-                        <span aria-hidden="true"><i class="bi bi-arrow-right"></i></span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+        <div th:if="${goals == null or goals.isEmpty()}" class="text-center mt-5">
+            <h4 class="text-muted">You don't have any goals yet.</h4>
+        </div>
     </div>
 </div>
 
