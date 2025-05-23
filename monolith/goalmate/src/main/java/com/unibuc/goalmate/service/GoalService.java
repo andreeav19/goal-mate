@@ -239,4 +239,12 @@ public class GoalService {
 
         return goal.getCurrentAmount();
     }
+
+    public String getGoalUnit(Long goalId) {
+        Goal goal = goalRepository.findById(goalId).orElseThrow(
+                () -> new EntityNotFoundException("Goal not found.")
+        );
+
+        return goal.getTargetUnit();
+    }
 }

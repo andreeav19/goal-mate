@@ -1,9 +1,6 @@
 package com.unibuc.goalmate.dto;
 
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +16,7 @@ public class GoalRequestDto {
     @NotNull(message = "Hobby should be specified.")
     private Long hobbyId;
 
+    @Size(max = 40, message = "Description should be 40 characters max.")
     private String description;
 
     @NotNull(message = "Target amount must be completed.")
