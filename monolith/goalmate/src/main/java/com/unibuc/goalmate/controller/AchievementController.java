@@ -29,6 +29,7 @@ public class AchievementController {
 
     @GetMapping("/add")
     public String getAddAchievementPage(@PathVariable Long id, Model model) {
+        model.addAttribute("unit", goalService.getGoalUnit(id));
         return addAchievementModelAttributes(id, model);
     }
 

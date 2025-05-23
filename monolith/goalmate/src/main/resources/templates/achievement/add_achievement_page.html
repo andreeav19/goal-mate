@@ -21,7 +21,9 @@
                         <input type="text" th:field="*{title}" class="form-control" id="inputTitle" required>
                     </div>
                     <div class="mb-3">
-                        <label for="inputAmount" class="form-label">Amount To Reach</label>
+                        <label for="inputAmount" class="form-label"
+                               th:text="${'Milestone Amount (' + unit + ')'}">
+                            Amount To Reach</label>
                         <input type="number" th:field="*{amountToReach}" step="0.01" th:min="${goalCurrentAmount + 0.01}" th:max="${goalTarget}"
                                class="form-control" id="inputAmount" required>
                     </div>
