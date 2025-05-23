@@ -41,7 +41,6 @@ class SessionServiceUnitTest {
         goal.setSessions(new ArrayList<>());
 
         SessionRequestDto dto = new SessionRequestDto();
-        dto.setDate(LocalDate.now());
         dto.setProgressAmount(30f);
 
         when(goalRepository.findById(goalId)).thenReturn(Optional.of(goal));
@@ -64,7 +63,6 @@ class SessionServiceUnitTest {
         goal.setSessions(new ArrayList<>());
 
         SessionRequestDto dto = new SessionRequestDto();
-        dto.setDate(LocalDate.now());
         dto.setProgressAmount(10f);
 
         when(goalRepository.findById(goalId)).thenReturn(Optional.of(goal));

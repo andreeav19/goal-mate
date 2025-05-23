@@ -24,6 +24,7 @@ public class SessionController {
 
     @GetMapping()
     public String getGoalSessions(@PathVariable Long id, Model model) {
+        model.addAttribute("today", LocalDate.now());
         model.addAttribute("goalSessions", goalService.getGoalSessions(id));
         model.addAttribute("isAdmin", authService.isCurrentUserAdmin());
         return "sessions/session_page";

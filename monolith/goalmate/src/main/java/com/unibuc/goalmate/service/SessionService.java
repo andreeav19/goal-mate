@@ -10,6 +10,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 @Service
@@ -29,7 +30,7 @@ public class SessionService {
         }
 
         Session session = new Session();
-        session.setDate(requestDto.getDate());
+        session.setDate(LocalDate.now());
         session.setProgressAmount(requestDto.getProgressAmount());
         session.setGoal(goal);
 

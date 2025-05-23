@@ -9,14 +9,16 @@
 
     <div class="flex-grow-1 px-3 mt-5">
 
-        <div th:if="${goalSessions.currentAmount < goalSessions.targetAmount}">
+        <div th:if="${goalSessions.currentAmount < goalSessions.targetAmount and
+            (goalSessions.goalDeadline == null or goalSessions.goalDeadline >= today)}">
             <th:block th:insert="~{fragments/section_header :: section_header(
             ${#strings.capitalize(goalSessions.goalName)} + ' Sessions',
             'Add Session',
             '/home/goals/' + ${goalSessions.goalId} + '/sessions/add'
             )}"></th:block>
         </div>
-        <div th:if="${goalSessions.currentAmount >= goalSessions.targetAmount}">
+        <div th:if="${goalSessions.currentAmount >= goalSessions.targetAmount or
+            (goalSessions.goalDeadline != null and goalSessions.goalDeadline < today)}">
             <th:block th:insert="~{fragments/section_header :: section_header(
             ${#strings.capitalize(goalSessions.goalName)} + ' Sessions',
             null,
@@ -37,8 +39,9 @@
                 <tbody>
                 <tr th:each="goalSession, iter : ${goalSessions.sessions}">
                     <th scope="row" th:text="${iter.index + 1}"></th>
-                    <td th:text="${goalSession.date}">Date</td>
-                    <td th:text="${goalSession.progressAmount + ' ' + goalSessions.unit}">Progress</td>
+                    <td th:text="${#temporals.format(goalSession.date, 'dd MMMM yyyy')}">Date</td>
+                    <td th:text="${@formatUtils.formatSmartDecimal(goalSession.progressAmount) + ' '
+                        + goalSessions.unit}">Progress</td>
                     <td>
                         <form
                             th:action="@{
@@ -55,7 +58,7 @@
         </div>
 
         <div th:if="${goalSessions.sessions == null or goalSessions.sessions.isEmpty()}" class="text-center mt-5">
-            <h4 class="text-muted">You don't have any sessions yet.</h4>
+            <h4 class="text-muted">You haven't added any sessions.</h4>
         </div>
     </div>
 

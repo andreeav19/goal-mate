@@ -72,7 +72,6 @@ class SessionServiceIntegrationTest {
     @Test
     void addSessionToGoal_ShouldSaveSessionAndUpdateGoal() {
         SessionRequestDto dto = new SessionRequestDto();
-        dto.setDate(LocalDate.now());
         dto.setProgressAmount(20f);
 
         sessionService.addSessionToGoal(goal.getGoalId(), dto);
@@ -83,7 +82,7 @@ class SessionServiceIntegrationTest {
 
         Session session = updated.getSessions().getFirst();
         assertEquals(20f, session.getProgressAmount());
-        assertEquals(dto.getDate(), session.getDate());
+        assertEquals(LocalDate.now(), session.getDate());
     }
 
     @Test
@@ -92,7 +91,6 @@ class SessionServiceIntegrationTest {
         goalRepository.save(goal);
 
         SessionRequestDto dto = new SessionRequestDto();
-        dto.setDate(LocalDate.now());
         dto.setProgressAmount(10f);
 
         sessionService.addSessionToGoal(goal.getGoalId(), dto);
