@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 
 @Controller
@@ -32,6 +33,9 @@ public class AchievementController {
 
     @GetMapping("/add")
     public String getAddAchievementPage(@PathVariable Long id, Model model) {
+        DecimalFormat df = new DecimalFormat("#.##");
+        model.addAttribute("minAmount", df.format(goalService.getGoalCurrentAmount(id) + 0.01));
+        model.addAttribute("maxAmount", df.format(goalService.getGoalTargetAmount(id)));
         model.addAttribute("unit", goalService.getGoalUnit(id));
         return addAchievementModelAttributes(id, model);
     }

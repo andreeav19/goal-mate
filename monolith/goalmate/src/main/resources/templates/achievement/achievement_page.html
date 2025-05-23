@@ -40,7 +40,8 @@
                 <tbody>
                 <tr th:each="achievement : ${goalAchievements.achievements}">
                     <th scope="row" th:text="${achievement.title}">Achievement Title</th>
-                    <td th:text="${achievement.amountToReach} + ' ' + ${goalAchievements.unit}">Amount</td>
+                    <td th:text="${@formatUtils.formatSmartDecimal(achievement.amountToReach)} + ' ' +
+                        ${goalAchievements.unit}">Amount</td>
                     <td th:text="${achievement.dateAwarded}">Date Awarded</td>
                     <td>
                         <form th:action="@{/home/goals/{goalId}/achievements/delete/{achievementId}

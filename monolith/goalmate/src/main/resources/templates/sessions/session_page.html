@@ -40,7 +40,8 @@
                 <tr th:each="goalSession, iter : ${goalSessions.sessions}">
                     <th scope="row" th:text="${iter.index + 1}"></th>
                     <td th:text="${goalSession.date}">Date</td>
-                    <td th:text="${goalSession.progressAmount + ' ' + goalSessions.unit}">Progress</td>
+                    <td th:text="${@formatUtils.formatSmartDecimal(goalSession.progressAmount) + ' '
+                        + goalSessions.unit}">Progress</td>
                     <td>
                         <form
                             th:action="@{
