@@ -29,42 +29,57 @@
                 <thead>
                 <tr>
                     <th scope="col">Session</th>
-                    <th scope="col">Date Completed</th>
+                    <th scope="col">
+                        Date Completed
+                        <a th:href="@{'/home/goals/' + ${goalSessions.goalId} + '/sessions?page=' + ${currentPage} + '&size=' + ${pageSize} + '&sortBy=date&sortDir=' + ${reverseSortDir}}"
+                           class="ms-1 text-decoration-none">
+                            <i th:classappend="${sortDir == 'asc'} ? 'bi bi-arrow-up' : 'bi bi-arrow-down'"></i>
+                        </a>
+                    </th>
                     <th scope="col">Progress Made</th>
                     <th scope="col">Delete</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="goalSession, iter : ${goalSessions.sessions}">
-                    <th scope="row" th:text="${iter.index + 1}"></th>
+                    <th scope="row" th:text="${iter.index + 1 + (currentPage * pageSize)}"></th>
                     <td th:text="${goalSession.date}">Date</td>
                     <td th:text="${goalSession.progressAmount}">Progress</td>
                     <td>
                         <form
-                            th:action="@{
+                                th:action="@{
                                 /home/goals/{id}/sessions/delete/{sessionId}
                                 (id=${goalSessions.goalId}, sessionId=${goalSession.sessionId})
                             }"
-                            method="post">
+                                method="post">
                             <button type="submit" class="btn btn-sm btn-danger">&minus;</button>
                         </form>
                     </td>
                 </tr>
                 </tbody>
             </table>
+
+            <nav th:if="${goalSessions.sessions.size()} > 0">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                        <a class="page-link"
+                           th:href="@{'/home/goals/' + ${goalSessions.goalId} + '/sessions?page=' + ${currentPage - 1} + '&size=' + ${pageSize} + '&sortBy=' + ${sortBy} + '&sortDir=' + ${sortDir}}">
+                            <i class="bi bi-arrow-left"></i>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <span class="page-link"><span th:text="${currentPage + 1}"></span></span>
+                    </li>
+                    <li class="page-item" th:classappend="${!goalSessions.hasNext} ? 'disabled'">
+                        <a class="page-link"
+                           th:href="@{'/home/goals/' + ${goalSessions.goalId} + '/sessions?page=' + ${currentPage + 1} + '&size=' + ${pageSize} + '&sortBy=' + ${sortBy} + '&sortDir=' + ${sortDir}}"><i
+                                class="bi bi-arrow-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
-
-<!--        <a th:href="@{/home/goals/sessions/{id}(id=${goalSession.sessionId})}" class="card-link">Edit</a>-->
-<!--        <form th:action="@{/home/goals/sessions/delete/{id}(id=${goalSession.sessionId})}"-->
-<!--              method="POST" style="display: inline;">-->
-<!--            <input type="hidden" name="_method" value="DELETE">-->
-<!--            <button type="submit" style="background: none; border: none; color: #ff0044;-->
-<!--                              text-decoration: underline; cursor: pointer;">-->
-<!--                Delete-->
-<!--            </button>-->
-<!--        </form>-->
     </div>
-
 </div>
 <th:block th:insert="~{fragments/script_end :: script_end}"></th:block>
 </body>

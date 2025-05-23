@@ -18,4 +18,5 @@ public class GoalSessionsResponseDto {
     private Float targetAmount;
     private Float currentAmount;
     private List<SessionResponseDto> sessions;
+    private boolean hasNext;
 }
