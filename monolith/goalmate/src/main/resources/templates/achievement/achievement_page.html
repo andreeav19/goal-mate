@@ -42,7 +42,7 @@
                     <th scope="row" th:text="${achievement.title}">Achievement Title</th>
                     <td th:text="${@formatUtils.formatSmartDecimal(achievement.amountToReach)} + ' ' +
                         ${goalAchievements.unit}">Amount</td>
-                    <td th:text="${achievement.dateAwarded}">Date Awarded</td>
+                    <td th:text="${#temporals.format(achievement.dateAwarded, 'dd MMMM yyyy')}">Date Awarded</td>
                     <td>
                         <form th:action="@{/home/goals/{goalId}/achievements/delete/{achievementId}
                                 (goalId=${goalAchievements.goalId}, achievementId=${achievement.achievementId})}" method="post">
