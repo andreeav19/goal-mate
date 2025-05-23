@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -17,5 +18,6 @@ public class GoalAchievementsResponseDto {
     private String unit;
     private Float targetAmount;
     private Float currentAmount;
+    private LocalDate goalDeadline;
     private List<AchievementResponseDto> achievements;
 }

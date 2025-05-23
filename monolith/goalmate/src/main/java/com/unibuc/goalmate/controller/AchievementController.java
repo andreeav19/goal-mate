@@ -12,6 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @Controller
 @RequestMapping("/home/goals/{id}/achievements")
 @RequiredArgsConstructor
@@ -22,6 +24,7 @@ public class AchievementController {
 
     @GetMapping()
     public String getGoalAchievements(@PathVariable Long id, Model model) {
+        model.addAttribute("today", LocalDate.now());
         model.addAttribute("goalAchievements", goalService.getGoalAchievements(id));
         model.addAttribute("isAdmin", authService.isCurrentUserAdmin());
         return "achievement/achievement_page";

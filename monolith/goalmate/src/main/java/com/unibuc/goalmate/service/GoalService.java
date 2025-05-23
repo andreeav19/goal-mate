@@ -206,6 +206,7 @@ public class GoalService {
                 goal.getTargetUnit(),
                 goal.getTargetAmount(),
                 goal.getCurrentAmount(),
+                goal.getDeadline(),
                 goal.getAchievements().stream().map(
                         achievement -> new AchievementResponseDto(
                                 achievement.getAchievementId(),

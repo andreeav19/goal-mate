@@ -8,11 +8,21 @@
     </div>
 
     <div class="flex-grow-1 px-3 mt-5">
-        <th:block th:insert="~{fragments/section_header :: section_header(
-        ${#strings.capitalize(goalAchievements.goalName)} + ' Achievements',
-        'Add Achievement',
-        '/home/goals/' + ${goalAchievements.goalId} + '/achievements/add'
-        )}"></th:block>
+        <div th:if="${goalAchievements.goalDeadline == null or goalAchievements.goalDeadline >= today}">
+            <th:block th:insert="~{fragments/section_header :: section_header(
+            ${#strings.capitalize(goalAchievements.goalName)} + ' Achievements',
+            'Add Achievement',
+            '/home/goals/' + ${goalAchievements.goalId} + '/achievements/add'
+            )}"></th:block>
+        </div>
+        <div th:if="${goalAchievements.goalDeadline != null and goalAchievements.goalDeadline < today}">
+            <th:block th:insert="~{fragments/section_header :: section_header(
+            ${#strings.capitalize(goalAchievements.goalName)} + ' Achievements',
+            null,
+            null
+            )}"></th:block>
+        </div>
+
 
         <div th:if="${goalAchievements.achievements != null and !goalAchievements.achievements.isEmpty()}"
              class="w-75 ms-5">
@@ -42,7 +52,7 @@
         </div>
         <div th:if="${goalAchievements.achievements == null or goalAchievements.achievements.isEmpty()}"
              class="text-center mt-5">
-            <h4 class="text-muted">You don't have any achievements yet.</h4>
+            <h4 class="text-muted">You haven't added any achievements.</h4>
         </div>
     </div>
 </div>
