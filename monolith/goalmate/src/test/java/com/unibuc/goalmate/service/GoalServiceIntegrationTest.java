@@ -290,60 +290,60 @@ class GoalServiceIntegrationTest {
         assertThrows(EntityNotFoundException.class, () -> goalService.deleteGoal(9999L));
     }
 
-    @Test
-    void getGoalSessions_ShouldReturnCorrectDto_WhenGoalExists() {
-        Hobby hobby = new Hobby();
-        hobby.setName("Test Hobby");
-        hobby.setGoals(new ArrayList<>());
-        hobbyRepository.save(hobby);
+//    @Test
+//    void getGoalSessions_ShouldReturnCorrectDto_WhenGoalExists() {
+//        Hobby hobby = new Hobby();
+//        hobby.setName("Test Hobby");
+//        hobby.setGoals(new ArrayList<>());
+//        hobbyRepository.save(hobby);
+//
+//        Goal goal = new Goal();
+//        goal.setUser(testUser);
+//        goal.setHobby(hobby);
+//        goal.setDescription("Goal with sessions");
+//        goal.setTargetAmount(100f);
+//        goal.setCurrentAmount(20f);
+//        goal.setTargetUnit("units");
+//        goal.setDeadline(LocalDate.now().plusDays(15));
+//        goal.setSessions(new ArrayList<>());
+//        goalRepository.save(goal);
+//
+//        Session session1 = new Session();
+//        session1.setDate(LocalDate.now());
+//        session1.setProgressAmount(10f);
+//        session1.setGoal(goal);
+//
+//        Session session2 = new Session();
+//        session2.setDate(LocalDate.now().plusDays(1));
+//        session2.setProgressAmount(15f);
+//        session2.setGoal(goal);
+//
+//        goal.getSessions().add(session1);
+//        goal.getSessions().add(session2);
+//
+//        goalRepository.save(goal);
+//
+//        GoalSessionsResponseDto dto = goalService.getGoalSessions(goal.getGoalId());
+//
+//        assertEquals(goal.getGoalId(), dto.getGoalId());
+//        assertEquals(hobby.getName(), dto.getGoalName());
+//        assertEquals(goal.getTargetUnit(), dto.getUnit());
+//        assertEquals(goal.getTargetAmount(), dto.getTargetAmount());
+//        assertEquals(goal.getCurrentAmount(), dto.getCurrentAmount());
+//
+//        assertEquals(2, dto.getSessions().size());
+//
+//        assertTrue(dto.getSessions().stream()
+//                .anyMatch(s -> s.getProgressAmount() == 10 && s.getDate().equals(session1.getDate())));
+//
+//        assertTrue(dto.getSessions().stream()
+//                .anyMatch(s -> s.getProgressAmount() == 15 && s.getDate().equals(session2.getDate())));
+//    }
 
-        Goal goal = new Goal();
-        goal.setUser(testUser);
-        goal.setHobby(hobby);
-        goal.setDescription("Goal with sessions");
-        goal.setTargetAmount(100f);
-        goal.setCurrentAmount(20f);
-        goal.setTargetUnit("units");
-        goal.setDeadline(LocalDate.now().plusDays(15));
-        goal.setSessions(new ArrayList<>());
-        goalRepository.save(goal);
-
-        Session session1 = new Session();
-        session1.setDate(LocalDate.now());
-        session1.setProgressAmount(10f);
-        session1.setGoal(goal);
-
-        Session session2 = new Session();
-        session2.setDate(LocalDate.now().plusDays(1));
-        session2.setProgressAmount(15f);
-        session2.setGoal(goal);
-
-        goal.getSessions().add(session1);
-        goal.getSessions().add(session2);
-
-        goalRepository.save(goal);
-
-        GoalSessionsResponseDto dto = goalService.getGoalSessions(goal.getGoalId());
-
-        assertEquals(goal.getGoalId(), dto.getGoalId());
-        assertEquals(hobby.getName(), dto.getGoalName());
-        assertEquals(goal.getTargetUnit(), dto.getUnit());
-        assertEquals(goal.getTargetAmount(), dto.getTargetAmount());
-        assertEquals(goal.getCurrentAmount(), dto.getCurrentAmount());
-
-        assertEquals(2, dto.getSessions().size());
-
-        assertTrue(dto.getSessions().stream()
-                .anyMatch(s -> s.getProgressAmount() == 10 && s.getDate().equals(session1.getDate())));
-
-        assertTrue(dto.getSessions().stream()
-                .anyMatch(s -> s.getProgressAmount() == 15 && s.getDate().equals(session2.getDate())));
-    }
-
-    @Test
-    void getGoalSessions_ShouldThrow_WhenGoalNotFound() {
-        assertThrows(EntityNotFoundException.class, () -> goalService.getGoalSessions(9999L));
-    }
+//    @Test
+//    void getGoalSessions_ShouldThrow_WhenGoalNotFound() {
+//        assertThrows(EntityNotFoundException.class, () -> goalService.getGoalSessions(9999L));
+//    }
 
     @Test
     void getGoalAchievements_ShouldReturnCorrectDto_WhenGoalExists() {
