@@ -20,4 +20,5 @@ public class GoalSessionsResponseDto {
     private Float currentAmount;
     private LocalDate goalDeadline;
     private List<SessionResponseDto> sessions;
+    private boolean hasNext;
 }

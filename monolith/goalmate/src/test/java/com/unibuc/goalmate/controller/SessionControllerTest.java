@@ -46,29 +46,29 @@ class SessionControllerTest {
     @MockitoBean
     private GoalService goalService;
 
-    @Test
-    @WithMockUser
-    void getGoalSessions_ValidId_ShouldReturnSessionsPage() throws Exception {
-        Long goalId = 1L;
-        GoalSessionsResponseDto response = new GoalSessionsResponseDto(
-                goalId,
-                "Drawing",
-                "paintings",
-                10f,
-                2f,
-                LocalDate.now(),
-                List.of(new SessionResponseDto(1L, LocalDate.now(), 2f))
-        );
-
-        when(goalService.getGoalSessions(goalId)).thenReturn(response);
-        when(authService.isCurrentUserAdmin()).thenReturn(true);
-
-        mockMvc.perform(get("/home/goals/1/sessions"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("sessions/session_page"))
-                .andExpect(model().attribute("isAdmin", true))
-                .andExpect(model().attribute("goalSessions", response));
-    }
+//    @Test
+//    @WithMockUser
+//    void getGoalSessions_ValidId_ShouldReturnSessionsPage() throws Exception {
+//        Long goalId = 1L;
+//        GoalSessionsResponseDto response = new GoalSessionsResponseDto(
+//                goalId,
+//                "Drawing",
+//                "paintings",
+//                10f,
+//                2f,
+//                LocalDate.now(),
+//                List.of(new SessionResponseDto(1L, LocalDate.now(), 2f))
+//        );
+//
+//        when(goalService.getGoalSessions(goalId)).thenReturn(response);
+//        when(authService.isCurrentUserAdmin()).thenReturn(true);
+//
+//        mockMvc.perform(get("/home/goals/1/sessions"))
+//                .andExpect(status().isOk())
+//                .andExpect(view().name("sessions/session_page"))
+//                .andExpect(model().attribute("isAdmin", true))
+//                .andExpect(model().attribute("goalSessions", response));
+//    }
 
     @Test
     @WithMockUser

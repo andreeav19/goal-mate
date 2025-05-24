@@ -23,10 +23,22 @@ public class SessionController {
     private final AuthService authService;
 
     @GetMapping()
-    public String getGoalSessions(@PathVariable Long id, Model model) {
+    public String getGoalSessions(@PathVariable Long id,
+                                  Model model,
+                                  @RequestParam(defaultValue = "0") int page,
+                                  @RequestParam(defaultValue = "10") int size,
+                                  @RequestParam(defaultValue = "date") String sortBy,
+                                  @RequestParam(defaultValue = "asc") String sortDir) {
+
         model.addAttribute("today", LocalDate.now());
-        model.addAttribute("goalSessions", goalService.getGoalSessions(id));
+        model.addAttribute("goalSessions", goalService.getGoalSessions(id, page, size, sortBy, sortDir));
         model.addAttribute("isAdmin", authService.isCurrentUserAdmin());
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
+        model.addAttribute("currentPage", page);
+        model.addAttribute("pageSize", size);
+
         return "sessions/session_page";
     }
 

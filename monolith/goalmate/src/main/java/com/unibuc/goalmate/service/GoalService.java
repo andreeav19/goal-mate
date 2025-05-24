@@ -4,18 +4,18 @@ import com.unibuc.goalmate.dto.*;
 import com.unibuc.goalmate.model.Goal;
 import com.unibuc.goalmate.model.GoalMateUser;
 import com.unibuc.goalmate.model.Hobby;
+import com.unibuc.goalmate.model.Session;
 import com.unibuc.goalmate.repository.GoalMateUserRepository;
 import com.unibuc.goalmate.repository.GoalRepository;
 import com.unibuc.goalmate.repository.HobbyRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -173,10 +173,44 @@ public class GoalService {
         goalRepository.delete(goal);
     }
 
-    public GoalSessionsResponseDto getGoalSessions(Long goalId) {
-        Goal goal = goalRepository.findById(goalId).orElseThrow(
-                () -> new EntityNotFoundException("Goal not found.")
-        );
+    public GoalSessionsResponseDto getGoalSessions(Long goalId, int page, int size, String sortBy, String sortDir) {
+        Goal goal = goalRepository.findById(goalId)
+                .orElseThrow(() -> new EntityNotFoundException("Goal not found."));
+
+        // 1. Obține toate sesiunile ca listă
+        List<Session> sessions = new ArrayList<>(goal.getSessions());
+
+        // 2. Sortează lista în funcție de câmp
+        Comparator<Session> comparator;
+        switch (sortBy) {
+            case "date" -> comparator = Comparator.comparing(Session::getDate);
+            case "progressAmount" -> comparator = Comparator.comparing(Session::getProgressAmount);
+            default -> comparator = Comparator.comparing(Session::getSessionId); // fallback
+        }
+
+        if (sortDir.equalsIgnoreCase("desc")) {
+            comparator = comparator.reversed();
+        }
+
+        sessions.sort(comparator);
+
+        int totalSessions = sessions.size();
+
+        // 3. Aplică paginare
+        int start = page * size;
+        int end = Math.min(start + size, sessions.size());
+        List<Session> paginatedSessions = (start < end) ? sessions.subList(start, end) : Collections.emptyList();
+
+        // 4. Mapare către DTO
+        List<SessionResponseDto> sessionDtos = paginatedSessions.stream()
+                .map(session -> new SessionResponseDto(
+                        session.getSessionId(),
+                        session.getDate(),
+                        session.getProgressAmount()
+                ))
+                .toList();
+
+        boolean hasNext = (page + 1) * size < totalSessions;
 
         return new GoalSessionsResponseDto(
                 goalId,
@@ -185,13 +219,8 @@ public class GoalService {
                 goal.getTargetAmount(),
                 goal.getCurrentAmount(),
                 goal.getDeadline(),
-                goal.getSessions().stream().map(
-                        session -> new SessionResponseDto(
-                                session.getSessionId(),
-                                session.getDate(),
-                                session.getProgressAmount()
-                        )
-                ).toList()
+                sessionDtos,
+                hasNext
         );
     }
 
