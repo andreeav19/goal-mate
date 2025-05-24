@@ -9,6 +9,16 @@
 
     <div class="flex-grow-1 px-3 mt-5">
 
+        <div th:if="${achievementMessage}" class="alert alert-success alert-dismissible fade show w-75 mx-auto"
+             role="alert">
+            <span th:text="${achievementMessage}"></span>
+            <a th:href="@{/home/goals/{goalId}/achievements(goalId=${goalSessions.goalId})}"
+               class="ms-2 fw-bold text-decoration-underline text-success">
+                See achievements
+            </a>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
         <div th:if="${goalSessions.currentAmount < goalSessions.targetAmount and
             (goalSessions.goalDeadline == null or goalSessions.goalDeadline >= today)}">
             <th:block th:insert="~{fragments/section_header :: section_header(
@@ -46,8 +56,9 @@
                 <tr th:each="goalSession, iter : ${goalSessions.sessions}">
                     <th scope="row" th:text="${iter.index + 1  + (currentPage * pageSize)}"></th>
                     <td th:text="${#temporals.format(goalSession.date, 'dd MMMM yyyy')}">Date</td>
-                    <td th:text="${@formatUtils.formatSmartDecimal(goalSession.progressAmount) + ' '
-                        + goalSessions.unit}">Progress</td>
+                    <td th:text="${@formatUtils.formatSmartDecimal(goalSession.progressAmount) + ' ' + goalSessions.unit}">
+                        Progress
+                    </td>
                     <td>
                         <form
                                 th:action="@{
@@ -87,8 +98,8 @@
             <h4 class="text-muted">You haven't added any sessions.</h4>
         </div>
     </div>
-
 </div>
+
 <th:block th:insert="~{fragments/script_end :: script_end}"></th:block>
 </body>
 </html>

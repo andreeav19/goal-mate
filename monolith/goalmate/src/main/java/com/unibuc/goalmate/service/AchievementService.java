@@ -56,25 +56,25 @@ public class AchievementService {
         achievementRepository.delete(achievement);
     }
 
-    public void checkAchievements(Long goalId, SessionRequestDto requestDto) {
+    public boolean checkAchievements(Long goalId, SessionRequestDto requestDto) {
         Goal goal = goalRepository.findById(goalId).orElseThrow(
                 () -> new EntityNotFoundException("Goal not found.")
         );
 
         List<Achievement> achievements = achievementRepository.findByGoal_GoalId(goalId);
         if (achievements.isEmpty()) {
-            return;
+            return false;
         }
 
+        boolean achievementUnlocked = false;
         for (Achievement achievement : achievements) {
-            if (achievement.getDateAwarded() != null) {
-                continue;
-            }
-
-            if (goal.getCurrentAmount() >= achievement.getAmountToReach()) {
+            if (achievement.getDateAwarded() == null &&
+                    goal.getCurrentAmount() >= achievement.getAmountToReach()) {
                 achievement.setDateAwarded(LocalDate.now());
                 achievementRepository.save(achievement);
+                achievementUnlocked = true;
             }
         }
+        return achievementUnlocked;
     }
 }

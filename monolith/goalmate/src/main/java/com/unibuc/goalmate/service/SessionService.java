@@ -20,13 +20,14 @@ public class SessionService {
     private final GoalRepository goalRepository;
     private final AchievementService achievementService;
 
-    public void addSessionToGoal(Long goalId, SessionRequestDto requestDto) {
+    public boolean addSessionToGoal(Long goalId, SessionRequestDto requestDto) {
         Goal goal = goalRepository.findById(goalId).orElseThrow(
-                () -> new EntityNotFoundException("Goal not found."));
+                () -> new EntityNotFoundException("Goal not found.")
+        );
 
         if (goal.getCurrentAmount() >= goal.getTargetAmount()) {
             UtilLogger.logWarningMessage("Session not added. Target amount is already reached.");
-            return;
+            return false;
         }
 
         Session session = new Session();
@@ -38,14 +39,12 @@ public class SessionService {
             goal.setSessions(new ArrayList<>());
         }
         goal.getSessions().add(session);
-        goal.setCurrentAmount(
-                goal.getCurrentAmount() + requestDto.getProgressAmount()
-        );
+        goal.setCurrentAmount(goal.getCurrentAmount() + requestDto.getProgressAmount());
 
         sessionRepository.save(session);
         goalRepository.save(goal);
 
-        achievementService.checkAchievements(goalId, requestDto);
+        return achievementService.checkAchievements(goalId, requestDto);
     }
 
     public void deleteSessionFromGoal(Long goalId, Long sessionId) {
