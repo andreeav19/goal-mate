@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 
@@ -51,17 +52,23 @@ public class SessionController {
     @PostMapping("/add")
     public String addSession(@PathVariable Long id, Model model,
                              @Valid @ModelAttribute("sessionRequest") SessionRequestDto requestDto,
-                             BindingResult bindingResult) {
+                             BindingResult bindingResult,
+                             RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            UtilLogger.logBindingResultErrors(
-                    bindingResult, "Could not add session to goal with id " + id);
+            UtilLogger.logBindingResultErrors(bindingResult, "Could not add session to goal with id " + id);
             model.addAttribute("errors", bindingResult.getAllErrors());
             return addSessionModelAttributes(id, model);
         }
 
-        sessionService.addSessionToGoal(id, requestDto);
+        boolean unlocked = sessionService.addSessionToGoal(id, requestDto);
+
+        if (unlocked) {
+            redirectAttributes.addFlashAttribute("achievementMessage", "🎉 Congratulations! You’ve unlocked an achievement!");
+        }
+
         return "redirect:/home/goals/" + id + "/sessions";
     }
+
 
     @PostMapping("/delete/{sessionId}")
     public String deleteSession(@PathVariable Long id, @PathVariable Long sessionId) {
