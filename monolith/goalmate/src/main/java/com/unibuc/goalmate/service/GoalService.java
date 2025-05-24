@@ -148,6 +148,9 @@ public class GoalService {
         Hobby oldHobby = goal.getHobby();
 
         if (!newHobby.equals(oldHobby)) {
+            if (oldHobby.getGoals() == null) {
+                oldHobby.setGoals(new ArrayList<>());
+            }
             oldHobby.getGoals().remove(goal);
             if (newHobby.getGoals() == null) {
                 newHobby.setGoals(new ArrayList<>());
@@ -215,11 +218,11 @@ public class GoalService {
                 goal.getTargetUnit(),
                 goal.getTargetAmount(),
                 goal.getCurrentAmount(),
+                goal.getDeadline(),
                 sessionDtos,
                 hasNext
         );
     }
-
 
     public GoalAchievementsResponseDto getGoalAchievements(Long goalId) {
         Goal goal = goalRepository.findById(goalId).orElseThrow(
@@ -232,6 +235,7 @@ public class GoalService {
                 goal.getTargetUnit(),
                 goal.getTargetAmount(),
                 goal.getCurrentAmount(),
+                goal.getDeadline(),
                 goal.getAchievements().stream().map(
                         achievement -> new AchievementResponseDto(
                                 achievement.getAchievementId(),
@@ -265,5 +269,13 @@ public class GoalService {
         );
 
         return goal.getCurrentAmount();
+    }
+
+    public String getGoalUnit(Long goalId) {
+        Goal goal = goalRepository.findById(goalId).orElseThrow(
+                () -> new EntityNotFoundException("Goal not found.")
+        );
+
+        return goal.getTargetUnit();
     }
 }

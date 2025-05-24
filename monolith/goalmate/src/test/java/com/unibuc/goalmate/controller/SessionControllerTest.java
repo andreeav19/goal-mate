@@ -56,6 +56,7 @@ class SessionControllerTest {
 //                "paintings",
 //                10f,
 //                2f,
+//                LocalDate.now(),
 //                List.of(new SessionResponseDto(1L, LocalDate.now(), 2f))
 //        );
 //
@@ -93,7 +94,7 @@ class SessionControllerTest {
     @Test
     @WithMockUser
     void postAddSession_ValidInput_ShouldRedirectSessionsPage() throws Exception {
-        SessionRequestDto dto = new SessionRequestDto(LocalDate.now(), 1f);
+        SessionRequestDto dto = new SessionRequestDto(1f);
 
         mockMvc.perform(post("/home/goals/1/sessions/add")
                 .flashAttr("sessionRequest", dto)
@@ -107,7 +108,7 @@ class SessionControllerTest {
     @Test
     @WithMockUser
     void postAddSession_InvalidInput_ShouldRedirectToAddSessionPage() throws Exception {
-        SessionRequestDto dto = new SessionRequestDto(null, null);
+        SessionRequestDto dto = new SessionRequestDto(null);
 
         mockMvc.perform(post("/home/goals/1/sessions/add")
                         .flashAttr("sessionRequest", dto)

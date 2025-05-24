@@ -17,14 +17,19 @@
 
                 <form th:action="@{/home/goals/{id}/sessions/add(id=${goalId})}" th:object="${sessionRequest}" method="post">
                     <div class="mb-3">
-                        <label for="inputAmount" class="form-label">Progress Amount</label>
+                        <label for="inputAmount" class="form-label"
+                            th:text="${'Progress Amount (' + unit + ')'}">Progress Amount</label>
                         <input type="number" th:field="*{progressAmount}" step="0.01" min="0.1"
                                class="form-control" id="inputAmount" required>
                     </div>
+
                     <div class="mb-3">
-                        <label for="inputDate" class="form-label">Completed Date</label>
-                        <input type="date" th:field="*{date}" id="inputDate" name="inputDate" class="form-control"
-                               th:max="${goalDeadline}" required/>
+                        <label class="form-label">Completed Date</label>
+                        <input type="text" class="form-control"
+                               th:value="${#temporals.format(today, 'dd MMMM yyyy')}"
+                               readonly tabindex="-1"
+                               aria-describedby="date-help">
+                        <div id="date-help" class="form-text">This will be automatically saved as today's date.</div>
                     </div>
 
                     <br>

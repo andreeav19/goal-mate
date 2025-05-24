@@ -30,6 +30,7 @@ public class SessionController {
                                   @RequestParam(defaultValue = "date") String sortBy,
                                   @RequestParam(defaultValue = "asc") String sortDir) {
 
+        model.addAttribute("today", LocalDate.now());
         model.addAttribute("goalSessions", goalService.getGoalSessions(id, page, size, sortBy, sortDir));
         model.addAttribute("isAdmin", authService.isCurrentUserAdmin());
         model.addAttribute("sortBy", sortBy);
@@ -43,6 +44,7 @@ public class SessionController {
 
     @GetMapping("/add")
     public String getAddSessionPage(@PathVariable Long id, Model model) {
+        model.addAttribute("unit", goalService.getGoalUnit(id));
         return addSessionModelAttributes(id, model);
     }
 
