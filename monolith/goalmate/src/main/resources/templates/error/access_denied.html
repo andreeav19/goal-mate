@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<th:block th:insert="~{fragments/head_start :: head_start('Access Denied')}"></th:block>
+
+<body>
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="row justify-content-center w-100">
+        <div class="col-md-4">
+            <h2 class="text-center mb-4">Access denied</h2>
+
+            <div class="alert alert-danger text-center">
+                You tried to access an unauthorized page.
+            </div>
+
+        </div>
+        <div class="text-center mt-3">
+            <br>
+            <p>Go back to <a href="/auth/login">log in page</a></p>
+        </div>
+    </div>
+
+</div>
+
+<th:block th:insert="~{fragments/script_end :: script_end}"></th:block>
+</body>
+</html>

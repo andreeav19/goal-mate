@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{fragments/head_start :: head_start('Hobbies')}"></th:block>
+<body>
+<div class="d-flex">
+    <div>
+        <th:block th:insert="~{fragments/home_sidebar :: home_sidebar('hobbies', ${isAdmin})}"></th:block>
+    </div>
+
+    <div class="flex-grow-1 px-3 mt-5">
+        <th:block th:insert="~{fragments/section_header :: section_header('Hobbies', 'Add Hobby', '/hobbies/add-hobby')}"></th:block>
+
+        <div th:if="${hobbiesPage.content != null and !#lists.isEmpty(hobbiesPage.content)}" class="w-75 mx-auto">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">
+                        Name
+                        <a th:href="@{/hobbies(page=${currentPage}, size=${pageSize}, sortBy='name', sortDir=${reverseSortDir})}"
+                           class="text-decoration-none ms-1">
+                            <i th:classappend="${sortDir == 'asc'} ? 'bi bi-arrow-up' : 'bi bi-arrow-down'"></i>
+                        </a>
+                    </th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="hobby, iter : ${hobbiesPage.content}">
+                    <th scope="row" th:text="${iter.index + 1 + (currentPage * pageSize)}"></th>
+                    <td th:text="${hobby.name}">Hobby name</td>
+                    <td th:text="${hobby.description}">Description</td>
+                    <td>
+                        <form th:action="@{/hobbies/delete-hobby}" method="post">
+                            <input type="hidden" name="hobbyName" th:value="${hobby.name}" />
+                            <button type="submit" class="btn btn-sm btn-danger">&minus;</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <nav aria-label="Hobby pagination" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <li th:classappend="${hobbiesPage.first} ? 'disabled'" class="page-item">
+                        <a class="page-link"
+                           th:href="@{/hobbies(page=${currentPage - 1}, size=${pageSize}, sortBy=${sortBy}, sortDir=${sortDir})}"
+                           aria-label="Previous">
+                            <span aria-hidden="true"><i class="bi bi-arrow-left"></i></span>
+                        </a>
+                    </li>
+
+                    <li class="page-item" th:each="i : ${#numbers.sequence(0, hobbiesPage.totalPages - 1)}"
+                        th:classappend="${i == currentPage} ? 'active'">
+                        <a class="page-link"
+                           th:href="@{/hobbies(page=${i}, size=${pageSize}, sortBy=${sortBy}, sortDir=${sortDir})}"
+                           th:text="${i + 1}">1</a>
+                    </li>
+
+                    <li th:classappend="${hobbiesPage.last} ? 'disabled'" class="page-item">
+                        <a class="page-link"
+                           th:href="@{/hobbies(page=${currentPage + 1}, size=${pageSize}, sortBy=${sortBy}, sortDir=${sortDir})}"
+                           aria-label="Next">
+                            <span aria-hidden="true"><i class="bi bi-arrow-right"></i></span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+        </div>
+
+        <div th:if="${hobbiesPage.content == null or #lists.isEmpty(hobbiesPage.content)}" class="text-center mt-5">
+            <h4 class="text-muted">You haven't added any hobbies yet.</h4>
+        </div>
+    </div>
+</div>
+
+<th:block th:insert="~{fragments/script_end :: script_end}"></th:block>
+</body>
+</html>

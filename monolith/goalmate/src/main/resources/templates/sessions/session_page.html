@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{fragments/head_start :: head_start('Goal Sessions')}"></th:block>
+<body>
+<div class="d-flex">
+    <div>
+        <th:block th:insert="~{fragments/home_sidebar :: home_sidebar('home', ${isAdmin})}"></th:block>
+    </div>
+
+    <div class="flex-grow-1 px-3 mt-5">
+
+        <div th:if="${achievementMessage}" class="alert alert-success alert-dismissible fade show w-75 mx-auto"
+             role="alert">
+            <span th:text="${achievementMessage}"></span>
+            <a th:href="@{/home/goals/{goalId}/achievements(goalId=${goalSessions.goalId})}"
+               class="ms-2 fw-bold text-decoration-underline text-success">
+                See achievements
+            </a>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div th:if="${goalSessions.currentAmount < goalSessions.targetAmount and
+            (goalSessions.goalDeadline == null or goalSessions.goalDeadline >= today)}">
+            <th:block th:insert="~{fragments/section_header :: section_header(
+            ${#strings.capitalize(goalSessions.goalName)} + ' Sessions',
+            'Add Session',
+            '/home/goals/' + ${goalSessions.goalId} + '/sessions/add'
+            )}"></th:block>
+        </div>
+        <div th:if="${goalSessions.currentAmount >= goalSessions.targetAmount or
+            (goalSessions.goalDeadline != null and goalSessions.goalDeadline < today)}">
+            <th:block th:insert="~{fragments/section_header :: section_header(
+            ${#strings.capitalize(goalSessions.goalName)} + ' Sessions',
+            null,
+            null
+            )}"></th:block>
+        </div>
+
+        <div th:if="${goalSessions.sessions != null and !goalSessions.sessions.isEmpty()}" class="w-75 mx-auto">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">Session</th>
+                    <th scope="col">
+                        Date Completed
+                        <a th:href="@{'/home/goals/' + ${goalSessions.goalId} + '/sessions?page=' + ${currentPage} + '&size=' + ${pageSize} + '&sortBy=date&sortDir=' + ${reverseSortDir}}"
+                           class="ms-1 text-decoration-none">
+                            <i th:classappend="${sortDir == 'asc'} ? 'bi bi-arrow-up' : 'bi bi-arrow-down'"></i>
+                        </a>
+                    </th>
+                    <th scope="col">Progress Made</th>
+                    <th scope="col">Delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="goalSession, iter : ${goalSessions.sessions}">
+                    <th scope="row" th:text="${iter.index + 1  + (currentPage * pageSize)}"></th>
+                    <td th:text="${#temporals.format(goalSession.date, 'dd MMMM yyyy')}">Date</td>
+                    <td th:text="${@formatUtils.formatSmartDecimal(goalSession.progressAmount) + ' ' + goalSessions.unit}">
+                        Progress
+                    </td>
+                    <td>
+                        <form
+                                th:action="@{
+                                /home/goals/{id}/sessions/delete/{sessionId}
+                                (id=${goalSessions.goalId}, sessionId=${goalSession.sessionId})
+                            }"
+                                method="post">
+                            <button type="submit" class="btn btn-sm btn-danger">&minus;</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <nav th:if="${goalSessions.sessions.size()} > 0">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                        <a class="page-link"
+                           th:href="@{'/home/goals/' + ${goalSessions.goalId} + '/sessions?page=' + ${currentPage - 1} + '&size=' + ${pageSize} + '&sortBy=' + ${sortBy} + '&sortDir=' + ${sortDir}}">
+                            <i class="bi bi-arrow-left"></i>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <span class="page-link"><span th:text="${currentPage + 1}"></span></span>
+                    </li>
+                    <li class="page-item" th:classappend="${!goalSessions.hasNext} ? 'disabled'">
+                        <a class="page-link"
+                           th:href="@{'/home/goals/' + ${goalSessions.goalId} + '/sessions?page=' + ${currentPage + 1} + '&size=' + ${pageSize} + '&sortBy=' + ${sortBy} + '&sortDir=' + ${sortDir}}"><i
+                                class="bi bi-arrow-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <div th:if="${goalSessions.sessions == null or goalSessions.sessions.isEmpty()}" class="text-center mt-5">
+            <h4 class="text-muted">You haven't added any sessions.</h4>
+        </div>
+    </div>
+</div>
+
+<th:block th:insert="~{fragments/script_end :: script_end}"></th:block>
+</body>
+</html>
