@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  postgres-auth:
+    image: postgres:15
+    container_name: postgres-auth
+    environment:
+      POSTGRES_DB: ${DB_AUTH}
+      POSTGRES_USER: ${USERNAME}
+      POSTGRES_PASSWORD: ${PASSWORD}
+    ports:
+      - "5435:5432"
+    volumes:
+      - pgdata-auth:/var/lib/postgresql/data
+
+volumes:
+  pgdata-auth:
