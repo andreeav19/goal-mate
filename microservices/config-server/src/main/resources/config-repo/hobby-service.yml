@@ -8,7 +8,7 @@ server:
 spring:
   datasource:
     url: ${URL}
-    username: ${USERNAME}
+    username: ${DB_USER}
     password: ${PASSWORD}
   jpa:
     hibernate:

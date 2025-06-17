@@ -6,7 +6,7 @@ services:
     container_name: postgres-auth
     environment:
       POSTGRES_DB: ${DB_AUTH}
-      POSTGRES_USER: ${USERNAME}
+      POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${PASSWORD}
     ports:
       - "5435:5432"
