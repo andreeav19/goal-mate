@@ -22,6 +22,7 @@ public class GatewaySecurityConfig {
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers("/auth/**").permitAll()
+                        .pathMatchers("/admin/**").hasRole("ADMIN")
                         .pathMatchers("/hobbies/**").hasRole("ADMIN")
                         .anyExchange().authenticated()
                 )
