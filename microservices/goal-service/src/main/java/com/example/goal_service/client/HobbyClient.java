@@ -1,4 +1,4 @@
-package com.example.goal_service.feign;
+package com.example.goal_service.client;
 
 import com.example.goal_service.dto.HobbyDto;
 import com.example.goal_service.dto.HobbyOptionDto;
@@ -8,7 +8,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient(name = "hobby-service", configuration = FeignClientConfig.class)
+@FeignClient(
+        name = "hobby-service",
+        configuration = FeignClientConfig.class,
+        fallback = HobbyClientFallback.class
+)
 public interface HobbyClient {
 
     @GetMapping("/hobbies/getHobby/{id}")

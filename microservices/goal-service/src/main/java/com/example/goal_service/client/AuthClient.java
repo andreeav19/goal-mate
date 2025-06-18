@@ -1,4 +1,4 @@
-package com.example.goal_service.feign;
+package com.example.goal_service.client;
 
 import com.example.goal_service.dto.GoalMateUserDto;
 import org.springframework.cloud.openfeign.FeignClient;

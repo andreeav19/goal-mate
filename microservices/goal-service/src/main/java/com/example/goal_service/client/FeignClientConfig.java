@@ -1,7 +1,6 @@
-package com.example.goal_service.feign;
+package com.example.goal_service.client;
 
 import feign.RequestInterceptor;
-import feign.RequestTemplate;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Bean;
