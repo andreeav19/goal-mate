@@ -34,3 +34,9 @@ resilience4j:
         failureRateThreshold: 50
         waitDurationInOpenState: 10s
         permittedNumberOfCallsInHalfOpenState: 3
+
+info:
+  app:
+    name: goal-service
+    description: Service for goals
+    version: 1.0.0

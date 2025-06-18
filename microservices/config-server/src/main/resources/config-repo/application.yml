@@ -9,3 +9,14 @@ spring:
   cloud:
     config:
       fail-fast: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  endpoint:
+    health:
+      show-details: always
+    prometheus:
+      access: unrestricted

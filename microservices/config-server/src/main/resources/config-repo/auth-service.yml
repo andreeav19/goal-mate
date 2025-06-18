@@ -19,3 +19,9 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+info:
+  app:
+    name: auth-service
+    description: Service for authentication
+    version: 1.0.0

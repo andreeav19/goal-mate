@@ -14,3 +14,9 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+info:
+  app:
+    name: hobby-service
+    description: Service for hobbies
+    version: 1.0.0
