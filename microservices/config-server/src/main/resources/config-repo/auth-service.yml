@@ -1,0 +1,27 @@
+jwt:
+  secret: ${JWT_SECRET}
+  expirationMs: ${JWT_EXPIRATION_MS}
+
+server:
+  port: 8080
+
+admin:
+  username: ${ADMIN_USERNAME}
+  password: ${ADMIN_PASSWORD}
+  email: ${ADMIN_EMAIL}
+
+spring:
+  datasource:
+    url: ${URL}
+    username: ${DB_USER}
+    password: ${PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+info:
+  app:
+    name: auth-service
+    description: Service for authentication
+    version: 1.0.0

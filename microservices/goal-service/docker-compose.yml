@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  postgres-auth:
+    image: postgres:15
+    container_name: postgres-goal
+    environment:
+      POSTGRES_DB: ${DB_GOAL}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${PASSWORD}
+    ports:
+      - "5437:5432"
+    volumes:
+      - pgdata-goal:/var/lib/postgresql/data
+
+volumes:
+  pgdata-goal:

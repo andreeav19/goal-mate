@@ -1,0 +1,39 @@
+server:
+  port: 8081
+
+spring:
+  cloud:
+    gateway:
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: true
+          routes:
+            - id: auth-service
+              uri: lb://auth-service
+              predicates:
+                - Path=/auth/**,/admin/**
+              filters:
+                - AddRequestHeader=From-Gateway,true
+            - id: hobby-service
+              uri: lb://hobby-service
+              predicates:
+                - Path=/hobbies/**
+              filters:
+                - AddRequestHeader=From-Gateway,true
+            - id: goal-service
+              uri: lb://goal-service
+              predicates:
+                - Path=/goals/**
+              filters:
+                - AddRequestHeader=From-Gateway,true
+
+jwt:
+  secret: ${JWT_SECRET}
+  expirationMs: ${JWT_EXPIRATION_MS}
+
+info:
+  app:
+    name: gateway-service
+    version: 1.0.0

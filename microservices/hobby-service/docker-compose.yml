@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  postgres-auth:
+    image: postgres:15
+    container_name: postgres-hobby
+    environment:
+      POSTGRES_DB: ${DB_HOBBY}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${PASSWORD}
+    ports:
+      - "5436:5432"
+    volumes:
+      - pgdata-hobby:/var/lib/postgresql/data
+
+volumes:
+  pgdata-hobby:
