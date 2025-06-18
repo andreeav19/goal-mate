@@ -56,32 +56,12 @@ public class GoalController {
         try {
             isAdmin = authClient.isCurrentUserAdmin();
         } catch (Exception e) {
-            // log if needed, or handle the case where auth-service is unreachable
+            UtilLogger.logErrorMessage(e.getMessage());
         }
         response.put("isAdmin", isAdmin);
 
         return ResponseEntity.ok(response);
     }
-
-//    @GetMapping("/meta")
-//    public ResponseEntity<?> getAddGoalMetadata() {
-//        boolean isAdmin = false;
-//        List<HobbyOptionDto> hobbies = List.of();
-//        try {
-//            isAdmin = authClient.isCurrentUserAdmin();
-//        } catch (Exception e) {
-//        }
-//        try {
-//            hobbies = hobbyClient.getHobbyOptions();
-//        } catch (Exception e) {
-//        }
-//
-//        Map<String, Object> response = new HashMap<>();
-//        response.put("isAdmin", isAdmin);
-//        response.put("hobbies", hobbies);
-//        response.put("today", LocalDate.now());
-//        return ResponseEntity.ok(response);
-//    }
 
     @PostMapping
     public ResponseEntity<?> addGoal(@RequestBody @Valid GoalRequestDto request,

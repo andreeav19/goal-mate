@@ -60,7 +60,7 @@ public class SessionService {
             throw new IllegalArgumentException(message);
         }
 
-        if (session.getDate().isAfter(goal.getDeadline())) {
+        if (goal.getDeadline() != null && session.getDate().isAfter(goal.getDeadline())) {
             String message = "Session date cannot be later than goal deadline.";
             UtilLogger.logErrorMessage(message);
             throw new RuntimeException(message);

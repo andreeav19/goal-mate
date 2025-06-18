@@ -35,32 +35,10 @@ public class AchievementController {
         try {
             isAdmin = authClient.isCurrentUserAdmin();
         } catch (Exception e) {
-            // optional: log warning
+            UtilLogger.logErrorMessage(e.getMessage());
         }
         response.put("isAdmin", isAdmin);
 
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/add")
-    public ResponseEntity<?> getAddAchievementData(@PathVariable Long id) {
-        DecimalFormat df = new DecimalFormat("#.##");
-        Map<String, Object> response = new HashMap<>();
-        response.put("minAmount", df.format(goalService.getGoalCurrentAmount(id) + 0.01));
-        response.put("maxAmount", df.format(goalService.getGoalTargetAmount(id)));
-        response.put("unit", goalService.getGoalUnit(id));
-        response.put("achievementRequest", new AchievementRequestDto());
-
-        boolean isAdmin = false;
-        try {
-            isAdmin = authClient.isCurrentUserAdmin();
-        } catch (Exception e) {
-        }
-        response.put("isAdmin", isAdmin);
-
-        response.put("goalId", id);
-        response.put("goalTarget", goalService.getGoalTargetAmount(id));
-        response.put("goalCurrentAmount", goalService.getGoalCurrentAmount(id));
         return ResponseEntity.ok(response);
     }
 

@@ -39,7 +39,7 @@ public class SessionController {
         try {
             isAdmin = authClient.isCurrentUserAdmin();
         } catch (Exception e) {
-            // Optional: log warning here
+            UtilLogger.logErrorMessage(e.getMessage());
         }
         response.put("isAdmin", isAdmin);
 
@@ -49,26 +49,6 @@ public class SessionController {
         response.put("currentPage", page);
         response.put("pageSize", size);
 
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/meta")
-    public ResponseEntity<?> getAddSessionMetadata(@PathVariable Long id) {
-        Map<String, Object> response = new HashMap<>();
-        response.put("unit", goalService.getGoalUnit(id));
-        response.put("sessionRequest", new SessionRequestDto());
-
-        boolean isAdmin = false;
-        try {
-            isAdmin = authClient.isCurrentUserAdmin();
-        } catch (Exception e) {
-        }
-        response.put("isAdmin", isAdmin);
-
-        response.put("goalId", id);
-        response.put("goalDeadline", goalService.getGoalDeadline(id));
-        response.put("goalTarget", goalService.getGoalTargetAmount(id));
-        response.put("today", LocalDate.now());
         return ResponseEntity.ok(response);
     }
 
