@@ -26,7 +26,6 @@ spring:
               uri: lb://goal-service
               predicates:
                 - Path=/goals/**
-#             TODO
               filters:
                 - AddRequestHeader=From-Gateway,true
 

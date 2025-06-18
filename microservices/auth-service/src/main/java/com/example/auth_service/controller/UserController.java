@@ -1,5 +1,6 @@
 package com.example.auth_service.controller;
 
+import com.example.auth_service.dto.GoalMateUserDto;
 import com.example.auth_service.dto.UserResponseDto;
 import com.example.auth_service.dto.UserRoleRequestDto;
 import com.example.auth_service.service.AuthService;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,6 +66,22 @@ public class UserController {
 
         userService.addUserRole(requestDto);
         return ResponseEntity.ok("Role added successfully.");
+    }
+
+    @GetMapping("/getUser/{email}")
+    public ResponseEntity<GoalMateUserDto> getUserByEmail(@PathVariable String email) {
+        GoalMateUserDto userDto = userService.findUserByEmail(email);
+        if (userDto == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(userDto);
+    }
+
+    @GetMapping("/check")
+    public ResponseEntity<Boolean> isCurrentUserAdmin(Authentication authentication) {
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));
+        return ResponseEntity.ok(isAdmin);
     }
 
     @PostMapping("/delete-role")

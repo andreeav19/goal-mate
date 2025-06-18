@@ -1,5 +1,6 @@
 package com.example.hobby_service.service;
 
+import com.example.hobby_service.dto.HobbyDto;
 import com.example.hobby_service.dto.HobbyOptionResponseDto;
 import com.example.hobby_service.dto.HobbyRequestDto;
 import com.example.hobby_service.dto.HobbyResponseDto;
@@ -59,6 +60,13 @@ public class HobbyService {
                         hobby.getName()
                 ))
                 .collect(Collectors.toList());
+    }
+
+    public HobbyDto findHobbyById(Long id) {
+        Hobby hobby = hobbyRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Hobby not found with id: " + id));
+
+        return new HobbyDto(hobby.getHobbyId(), hobby.getName(), hobby.getDescription());
     }
 }
 

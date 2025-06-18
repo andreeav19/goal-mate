@@ -1,5 +1,7 @@
 package com.example.hobby_service.controller;
 
+import com.example.hobby_service.dto.HobbyDto;
+import com.example.hobby_service.dto.HobbyOptionResponseDto;
 import com.example.hobby_service.dto.HobbyRequestDto;
 import com.example.hobby_service.service.HobbyService;
 import com.example.hobby_service.util.UtilLogger;
@@ -8,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/hobbies")
@@ -40,6 +44,21 @@ public class HobbyController {
         } catch (RuntimeException ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
+    }
+
+    @GetMapping("/getHobby/{id}")
+    public ResponseEntity<HobbyDto> getHobbyById(@PathVariable Long id) {
+        HobbyDto hobbyDto = hobbyService.findHobbyById(id);
+        if (hobbyDto == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(hobbyDto);
+    }
+
+    @GetMapping("/options")
+    public ResponseEntity<List<HobbyOptionResponseDto>> getHobbyOptions() {
+        List<HobbyOptionResponseDto> options = hobbyService.getHobbyOptions();
+        return ResponseEntity.ok(options);
     }
 
     @DeleteMapping

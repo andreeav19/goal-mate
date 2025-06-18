@@ -1,5 +1,6 @@
 package com.example.auth_service.service;
 
+import com.example.auth_service.dto.GoalMateUserDto;
 import com.example.auth_service.dto.UserResponseDto;
 import com.example.auth_service.dto.UserRoleRequestDto;
 import com.example.auth_service.model.GoalMateUser;
@@ -100,5 +101,16 @@ public class UserService {
 
         roleRepository.save(role);
         userRepository.save(user);
+    }
+
+    public GoalMateUserDto findUserByEmail(String email) {
+        GoalMateUser user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("User not found."));
+
+        return new GoalMateUserDto(
+                user.getUserId(),
+                user.getEmail(),
+                user.getUsername()
+        );
     }
 }
