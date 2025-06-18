@@ -34,6 +34,7 @@ public class UserController {
             @RequestParam(defaultValue = "asc") String sortDir) {
 
         if (principal == null) {
+            UtilLogger.logErrorMessage("GET /admin: Principal object is null.");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
         }
 
