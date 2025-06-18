@@ -1,7 +1,7 @@
 package com.example.goal_service.controller;
 
 import com.example.goal_service.dto.AchievementRequestDto;
-import com.example.goal_service.feign.AuthClient;
+import com.example.goal_service.client.AuthClient;
 import com.example.goal_service.service.AchievementService;
 import com.example.goal_service.service.GoalService;
 import com.example.goal_service.util.UtilLogger;
@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;

@@ -1,7 +1,7 @@
 package com.example.goal_service.controller;
 
 import com.example.goal_service.dto.SessionRequestDto;
-import com.example.goal_service.feign.AuthClient;
+import com.example.goal_service.client.AuthClient;
 import com.example.goal_service.service.GoalService;
 import com.example.goal_service.service.SessionService;
 import com.example.goal_service.util.UtilLogger;

@@ -1,14 +1,17 @@
 package com.example.goal_service.service;
 
 import com.example.goal_service.dto.*;
-import com.example.goal_service.feign.AuthClient;
-import com.example.goal_service.feign.HobbyClient;
+import com.example.goal_service.client.AuthClient;
+import com.example.goal_service.client.HobbyClient;
 import com.example.goal_service.model.Goal;
 import com.example.goal_service.model.Session;
 import com.example.goal_service.repository.GoalRepository;
 import com.example.goal_service.util.UtilLogger;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 

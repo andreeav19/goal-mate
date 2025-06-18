@@ -13,4 +13,7 @@ import lombok.Setter;
 public class HobbyOptionDto {
     private Long hobbyId;
     private String hobbyName;
+
+    public HobbyOptionDto(String fallbackOption) {
+    }
 }
