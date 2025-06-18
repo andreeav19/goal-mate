@@ -1,0 +1,16 @@
+jwt:
+  secret: ${JWT_SECRET}
+  expirationMs: ${JWT_EXPIRATION_MS}
+
+server:
+  port: 8083
+
+spring:
+  datasource:
+    url: ${URL}
+    username: ${DB_USER}
+    password: ${PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true

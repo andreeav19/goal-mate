@@ -24,6 +24,7 @@ public class GatewaySecurityConfig {
                         .pathMatchers("/auth/**").permitAll()
                         .pathMatchers("/admin/**").hasRole("ADMIN")
                         .pathMatchers("/hobbies/**").hasRole("ADMIN")
+                        .pathMatchers("/goals/**").hasAnyRole("ADMIN", "USER")
                         .anyExchange().authenticated()
                 )
                 .addFilterAt((WebFilter) jwtWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
